@@ -1,5 +1,5 @@
-# Laravel 5 - Laravel Report Generators (PDF & Excel)
-Rapidly Generate Simple Pdf Report on Laravel 5 (Using [barryvdh/laravel-dompdf](https://github.com/barryvdh/laravel-dompdf) or [barryvdh/laravel-snappy](https://github.com/barryvdh/laravel-snappy)) or Excel Report (using [Maatwebsite/Laravel-Excel](https://github.com/Maatwebsite/Laravel-Excel))
+# Laravel Report Generators (PDF & Excel)
+Rapidly Generate Simple Pdf Report on Laravel (Using [barryvdh/laravel-dompdf](https://github.com/barryvdh/laravel-dompdf) or [barryvdh/laravel-snappy](https://github.com/barryvdh/laravel-snappy)) or Excel Report (using [Maatwebsite/Laravel-Excel](https://github.com/Maatwebsite/Laravel-Excel))
 
 This package provides a simple pdf & excel report generators to speed up your workflow
 
@@ -183,6 +183,8 @@ Or, you can total all records by group using `groupBy` method
 ## Other Method
 
 ### 1. setPaper($paper = 'a4')
+**Supported Media Type**: PDF
+
 **Description**: Set Paper Size
 
 **Params**: 
@@ -190,12 +192,14 @@ Or, you can total all records by group using `groupBy` method
 
 **Usage:**
 ```php
-PdfReportGenerator::of($title, $meta, $queryBuilder, $columns)
+PdfReport::of($title, $meta, $queryBuilder, $columns)
                   ->setPaper('a6')
                   ->make();
 ```
 
 ### 2. setCss(Array $styles)
+**Supported Media Type**: PDF, Excel
+
 **Description**: Set a new custom styles with given selector and style to apply
 
 **Params**: 
@@ -203,7 +207,7 @@ PdfReportGenerator::of($title, $meta, $queryBuilder, $columns)
 
 **Usage:**
 ```php
-PdfReportGenerator::of($title, $meta, $queryBuilder, $columns)
+ExcelReport::of($title, $meta, $queryBuilder, $columns)
                 ->editColumn('Registered At', [
                     'class' => 'right bolder italic-red'
                 ])
@@ -215,6 +219,8 @@ PdfReportGenerator::of($title, $meta, $queryBuilder, $columns)
 ```
 
 ### 3. setOrientation($orientation = 'portrait')
+**Supported Media Type**: PDF
+
 **Description**: Set Orientation to Landscape or Portrait
 
 **Params**: 
@@ -222,7 +228,7 @@ PdfReportGenerator::of($title, $meta, $queryBuilder, $columns)
 
 **Usage:**
 ```php
-PdfReportGenerator::of($title, $meta, $queryBuilder, $columns)
+PdfReport::of($title, $meta, $queryBuilder, $columns)
                   ->setOrientation('landscape')
                   ->make();
 ```
