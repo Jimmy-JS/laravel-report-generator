@@ -10,7 +10,7 @@ class ExcelReport extends ReportGenerator
 	public function download($filename)
 	{
         return Excel::create($filename, function($excel) use($filename) {
-		    $excel->sheet($filename, function($sheet) {
+		    $excel->sheet('Sheet 1', function($sheet) {
 				$headers = $this->headers;
 				$query = $this->query;
 				$columns = $this->columns;
@@ -20,6 +20,7 @@ class ExcelReport extends ReportGenerator
 				$editColumns = $this->editColumns;
 				$showTotalColumns = $this->showTotalColumns;
 				$styles = $this->styles;
+
 				$sheet->setColumnFormat(['A:Z' => '@']);
 		    	$sheet->loadView('report-generator-view::general-excel-template', compact('headers', 'columns', 'editColumns', 'showTotalColumns', 'styles', 'query', 'limit', 'groupByArr', 'orientation'));
 		    });
