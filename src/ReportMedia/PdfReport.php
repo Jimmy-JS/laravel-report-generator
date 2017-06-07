@@ -26,7 +26,11 @@ class PdfReport extends ReportGenerator
 			$pdf->setOption('footer-left', 'Page [page] of [topage]');
 			$pdf->setOption('footer-right', 'Date Printed: ' . date('d M Y H:i:s'));
 		} catch (\ReflectionException $e) {
-			$pdf = \App::make('dompdf.wrapper');
+			try {
+				$pdf = \App::make('dompdf.wrapper');
+			} catch (\ReflectionException $e) {
+				throw new \Exception('Please install either barryvdh/laravel-snappy or laravel-dompdf to generate PDF Report!');
+			}
 		}
 
 		return $pdf->loadHTML($html)->setPaper($this->paper, $orientation);

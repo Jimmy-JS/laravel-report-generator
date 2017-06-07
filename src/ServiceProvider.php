@@ -28,6 +28,7 @@ class ServiceProvider extends IlluminateServiceProvider
         $this->app->singleton('pdf.report.generator', function ($app) {
             return new PdfReport($app);
         });
+        $this->app->register('Maatwebsite\Excel\ExcelServiceProvider');
 
         $this->registerAliases();
 	}

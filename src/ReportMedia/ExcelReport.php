@@ -2,14 +2,13 @@
 
 namespace Jimmyjs\ReportGenerator\ReportMedia;
 
-use Excel;
 use Jimmyjs\ReportGenerator\ReportGenerator;
 
 class ExcelReport extends ReportGenerator
 {
 	public function download($filename)
 	{
-        return Excel::create($filename, function($excel) use($filename) {
+        return \App::make('excel')->create($filename, function($excel) use($filename) {
 		    $excel->sheet('Sheet 1', function($sheet) {
 				$headers = $this->headers;
 				$query = $this->query;
