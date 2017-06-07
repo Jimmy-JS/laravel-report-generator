@@ -45,7 +45,7 @@ public function displayReport(Request $request) {
     // Set Column to be displayed
     $columns = [
         'Name' => 'name',
-        'Registered At' => 'registered_at',
+        'Registered At', // if no column_name specified, this will automatically seach for snake_case of column name (will be registered_at) column from query result
         'Total Balance' => 'balance',
         'Status' => function($result) { // You can do if statement or any action do you want inside this closure
             return ($result->balance > 100000) ? 'Rich Man' : 'Normal Guy';
@@ -57,6 +57,7 @@ public function displayReport(Request $request) {
 
         - of()         : Init the title, meta (filters description to show), query, column (to be shown)
         - editColumn() : To Change column class or manipulate its data for displaying to report
+        - editColumns(): Mass edit column
         - showTotal()  : Used to sum all value on specified column on the last table (except using groupBy method). 'point' is a type for displaying total with a thousand separator
         - groupBy()    : Show total of value on specific group. Used with showTotal() enabled.
         - limit()      : Limit record to be showed
@@ -69,12 +70,11 @@ public function displayReport(Request $request) {
                         }
                     ])
                     ->editColumn('Total Balance', [
-                        'class' => 'right bold', 
                         'displayAs' => function($result) {
                             return thousandSeparator($result->balance);
                         }
                     ])
-                    ->editColumn('Status', [
+                    ->editColumns(['Total Balance', 'Status'], [
                         'class' => 'right bold'
                     ])
                     ->showTotal([
