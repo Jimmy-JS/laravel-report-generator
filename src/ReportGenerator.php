@@ -31,9 +31,24 @@ class ReportGenerator
 		];
 
 		$this->query = $query;
-		$this->columns = $columns;
+		$this->columns = $this->mapColumns($columns);
 
 		return $this;
+	}
+
+	private function mapColumns(Array $columns)
+	{
+		$result = [];
+
+		foreach ($columns as $name => $data) {
+			if (is_int($name)) {
+				$result[$data] = snake_case($data);
+			} else {
+				$result[$name] = $data;
+			}
+		}
+
+		return $result;
 	}
 
 	public function setPaper($paper)
@@ -43,9 +58,20 @@ class ReportGenerator
 		return $this;
 	}
 
-	public function editColumn($columnName, Array $option)
+	public function editColumn($columnName, Array $options)
 	{
-		$this->editColumns[$columnName] = $option;
+		foreach ($options as $option => $value) {
+			$this->editColumns[$columnName][$option] = $value;
+		}
+
+		return $this;
+	}
+
+	public function editColumns(Array $columnNames, Array $options)
+	{
+		foreach ($columnNames as $columnName) {
+			$this->editColumn($columnName, $options);
+		}
 
 		return $this;
 	}
