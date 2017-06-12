@@ -89,7 +89,7 @@
 							if (is_object($columns[$groupBy]) && $columns[$groupBy] instanceof Closure) {
 		    					$thisGroupByData[$groupBy] = $columns[$groupBy]($result);
 		    				} else {
-		    					$thisGroupByData[$groupBy] = $result->$columns[$groupBy];
+		    					$thisGroupByData[$groupBy] = $result->{$columns[$groupBy]};
 		    				}
 
 		    				if (isset($currentGroupByData[$groupBy])) {
@@ -139,7 +139,7 @@
 		    				if (is_object($colData) && $colData instanceof Closure) {
 		    					$generatedColData = $colData($result);
 		    				} else {
-		    					$generatedColData = $result->$colData;
+		    					$generatedColData = $result->{$colData};
 		    				}
 		    				$displayedColValue = $generatedColData;
 		    				if (array_key_exists($colName, $editColumns)) {
