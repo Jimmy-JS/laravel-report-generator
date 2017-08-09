@@ -7,6 +7,15 @@ use Jimmyjs\ReportGenerator\ReportGenerator;
 
 class ExcelReport extends ReportGenerator
 {
+	private $format = 'xlsx';
+
+	public function setFormat($format)
+	{
+		$this->format = $format;
+
+		return $this;
+	}
+
 	public function download($filename)
 	{
 		if ($this->simpleVersion) return $this->simpleDownload($filename);
@@ -26,7 +35,7 @@ class ExcelReport extends ReportGenerator
 				$sheet->setColumnFormat(['A:Z' => '@']);
 		    	$sheet->loadView('report-generator-view::general-excel-template', compact('headers', 'columns', 'editColumns', 'showTotalColumns', 'styles', 'query', 'limit', 'groupByArr', 'orientation'));
 		    });
-        })->export('xls');
+        })->export($this->format);
 	}
 
 	public function simpleDownload($filename)
@@ -45,7 +54,9 @@ class ExcelReport extends ReportGenerator
 		    		$sheet->appendRow([$key, $value]);
 	    		}
 	    		$sheet->appendRow([' ']);
-				$sheet->appendRow(array_keys($this->columns));
+	    		$columns = array_keys($this->columns);
+	    		array_unshift($columns, 'No');
+				$sheet->appendRow($columns);
 				$this->query->chunk($chunkRecordCount, function($results) use(&$ctr, $sheet) {
 					if ($this->limit != null && $ctr == $this->limit + 1) return false;
 					foreach ($results as $result) {
@@ -56,7 +67,7 @@ class ExcelReport extends ReportGenerator
 					}
 				});
 		    });
-        })->export('xls');
+        })->export($this->format);
 	}
 
 	private function formatRow($result)
