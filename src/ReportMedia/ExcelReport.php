@@ -2,13 +2,16 @@
 
 namespace Jimmyjs\ReportGenerator\ReportMedia;
 
+use App, Closure;
 use Jimmyjs\ReportGenerator\ReportGenerator;
 
 class ExcelReport extends ReportGenerator
 {
 	public function download($filename)
 	{
-        return \App::make('excel')->create($filename, function($excel) use($filename) {
+		if ($this->simpleVersion) return $this->simpleDownload($filename);
+
+		return App::make('excel')->create($filename, function($excel) use($filename) {
 		    $excel->sheet('Sheet 1', function($sheet) {
 				$headers = $this->headers;
 				$query = $this->query;
@@ -24,5 +27,62 @@ class ExcelReport extends ReportGenerator
 		    	$sheet->loadView('report-generator-view::general-excel-template', compact('headers', 'columns', 'editColumns', 'showTotalColumns', 'styles', 'query', 'limit', 'groupByArr', 'orientation'));
 		    });
         })->export('xls');
+	}
+
+	public function simpleDownload($filename)
+	{
+        return App::make('excel')->create($filename, function($excel) use($filename) {
+		    $excel->sheet('Sheet 1', function($sheet) {
+				$groupByArr = $this->groupByArr;
+				$showTotalColumns = $this->showTotalColumns;
+				$sheet->setColumnFormat(['A:Z' => '@']);
+				$ctr = 1;
+				$this->limit = 10;
+	    		$chunkRecordCount = ($this->limit == null || $this->limit > 1000) ? 1000 : $this->limit;
+
+	    		$sheet->appendRow([$this->headers['title']]);
+	    		$sheet->appendRow([' ']);
+	    		foreach ($this->headers['meta'] as $key => $value) {
+		    		$sheet->appendRow([$key, $value]);
+	    		}
+	    		$sheet->appendRow([' ']);
+				$sheet->appendRow(array_keys($this->columns));
+				$this->query->chunk($chunkRecordCount, function($results) use(&$ctr, $sheet) {
+					if ($this->limit != null && $ctr == $this->limit + 1) return false;
+					foreach ($results as $result) {
+						$formattedRows = $this->formatRow($result);
+						array_unshift($formattedRows, $ctr);
+						$sheet->appendRow($formattedRows);
+						$ctr ++;
+					}
+				});
+		    });
+        })->export('xls');
+	}
+
+	private function formatRow($result)
+	{
+		$rows = [];
+		foreach ($this->columns as $colName => $colData) {
+			if (is_object($colData) && $colData instanceof Closure) {
+				$generatedColData = $colData($result);
+			} else {
+				$generatedColData = $result->$colData;
+			}
+			$displayedColValue = $generatedColData;
+			if (array_key_exists($colName, $this->editColumns)) {
+				if (isset($this->editColumns[$colName]['displayAs'])) {
+					$displayAs = $this->editColumns[$colName]['displayAs'];
+					if (is_object($displayAs) && $displayAs instanceof Closure) {
+						$displayedColValue = $displayAs($result);
+					} elseif (!(is_object($displayAs) && $displayAs instanceof Closure)) {
+						$displayedColValue = $displayAs;
+					}
+				}
+			}
+			array_push($rows, $displayedColValue);
+		}
+
+		return $rows;
 	}
 }

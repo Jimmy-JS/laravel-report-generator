@@ -15,6 +15,7 @@ class ReportGenerator
 	protected $editColumns = [];
 	protected $showTotalColumns = [];
 	protected $styles = [];
+	protected $simpleVersion = false;
 
 	public function media($media)
 	{
@@ -32,6 +33,13 @@ class ReportGenerator
 
 		$this->query = $query;
 		$this->columns = $this->mapColumns($columns);
+
+		return $this;
+	}
+
+	public function simple()
+	{
+		$this->simpleVersion = true;
 
 		return $this;
 	}
