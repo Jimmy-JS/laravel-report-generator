@@ -37,7 +37,6 @@ class ExcelReport extends ReportGenerator
 				$showTotalColumns = $this->showTotalColumns;
 				$sheet->setColumnFormat(['A:Z' => '@']);
 				$ctr = 1;
-				$this->limit = 10;
 	    		$chunkRecordCount = ($this->limit == null || $this->limit > 1000) ? 1000 : $this->limit;
 
 	    		$sheet->appendRow([$this->headers['title']]);
