@@ -8,6 +8,7 @@ use Jimmyjs\ReportGenerator\ReportGenerator;
 class ExcelReport extends ReportGenerator
 {
 	private $format = 'xlsx';
+	private $total = [];
 
 	public function setFormat($format)
 	{
@@ -43,20 +44,26 @@ class ExcelReport extends ReportGenerator
         return App::make('excel')->create($filename, function($excel) use($filename) {
 		    $excel->sheet('Sheet 1', function($sheet) {
 				$groupByArr = $this->groupByArr;
-				$showTotalColumns = $this->showTotalColumns;
 				$sheet->setColumnFormat(['A:Z' => '@']);
 				$ctr = 1;
+				foreach ($this->showTotalColumns as $column => $type) {
+					$this->total[$column] = 0;
+				}
+
 	    		$chunkRecordCount = ($this->limit == null || $this->limit > 1000) ? 1000 : $this->limit;
 
 	    		$sheet->appendRow([$this->headers['title']]);
+
 	    		$sheet->appendRow([' ']);
 	    		foreach ($this->headers['meta'] as $key => $value) {
 		    		$sheet->appendRow([$key, $value]);
 	    		}
+
 	    		$sheet->appendRow([' ']);
 	    		$columns = array_keys($this->columns);
 	    		array_unshift($columns, 'No');
 				$sheet->appendRow($columns);
+
 				$this->query->chunk($chunkRecordCount, function($results) use(&$ctr, $sheet) {
 					if ($this->limit != null && $ctr == $this->limit + 1) return false;
 					foreach ($results as $result) {
@@ -66,6 +73,19 @@ class ExcelReport extends ReportGenerator
 						$ctr ++;
 					}
 				});
+
+				if ($this->showTotalColumns != []) {
+					$totalRows = ['Grand Total'];
+					array_shift($columns);
+					foreach ($columns as $columnName) {
+						if (array_key_exists($columnName, $this->showTotalColumns)) {
+							array_push($totalRows, number_format($this->total[$columnName], 0, '.', ','));
+						} else {
+							array_push($totalRows, '');
+						}
+					}
+					$sheet->appendRow($totalRows);
+				}
 		    });
         })->export($this->format);
 	}
@@ -90,6 +110,11 @@ class ExcelReport extends ReportGenerator
 					}
 				}
 			}
+
+			if (array_key_exists($colName, $this->showTotalColumns)) {
+				$this->total[$colName] += $generatedColData;
+			}
+
 			array_push($rows, $displayedColValue);
 		}
 
