@@ -154,6 +154,8 @@
 		    										echo '<td class="right"><b>' . number_format($total[$colName], 0, ',', '.') . '</b></td>';
 		    									} elseif ($showTotalColumns[$colName] == 'idr') {
 		    										echo '<td class="right"><b>IDR ' . number_format($total[$colName], 0, ',', '.') . '</b></td>';
+		    									} elseif ($showTotalColumns[$colName] == '$') {
+		    										echo '<td class="right"><b>$ ' . number_format($total[$colName], 2, ',', '.') . '</b></td>';
 		    									}
 		    									$dataFound = true;
 		    								} else {
@@ -221,6 +223,8 @@
 										<td class="right"><b>{{ number_format($total[$colName], 0, ',', '.') }}</b></td>
 									@elseif ($showTotalColumns[$colName] == 'idr')
 										<td class="right"><b>IDR {{ number_format($total[$colName], 0, ',', '.') }}</b></td>
+									@elseif ($showTotalColumns[$colName] == 'idr')
+										<td class="right"><b>$ {{ number_format($total[$colName], 2, ',', '.') }}</b></td>
 									@endif
 								@else
 									@if ($dataFound)
