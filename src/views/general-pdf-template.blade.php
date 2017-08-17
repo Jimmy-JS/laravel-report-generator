@@ -223,6 +223,8 @@
 										<td class="right"><b>{{ number_format($total[$colName], 0, ',', '.') }}</b></td>
 									@elseif ($showTotalColumns[$colName] == 'idr')
 										<td class="right"><b>IDR {{ number_format($total[$colName], 0, ',', '.') }}</b></td>
+									@elseif ($showTotalColumns[$colName] == 'idr')
+										<td class="right"><b>$ {{ number_format($total[$colName], 2, ',', '.') }}</b></td>
 									@endif
 								@else
 									@if ($dataFound)
