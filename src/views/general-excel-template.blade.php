@@ -29,7 +29,7 @@
 		</style>
 	</head>
 	<body>
-		<?php 
+		<?php
 		$ctr = 1;
 		$no = 1;
 		$currentGroupByData = [];
@@ -81,7 +81,7 @@
 			$query->chunk($chunkRecordCount, function($results) use(&$ctr, &$no, &$total, &$currentGroupByData, &$isOnSameGroup, $grandTotalSkip, $headers, $columns, $limit, $editColumns, $showTotalColumns, $groupByArr, $__env) {
 			?>
     		@foreach($results as $result)
-				<?php 
+				<?php
 					if ($limit != null && $ctr == $limit + 1) return false;
 					if ($groupByArr != []) {
 						$isOnSameGroup = true;
@@ -109,8 +109,8 @@
     								if (array_key_exists($colName, $showTotalColumns)) {
     									if ($showTotalColumns[$colName] == 'point') {
     										echo '<td class="right bg-black"><b>' . number_format($total[$colName], 0, '.', ',') . '</b></td>';
-    									} elseif ($showTotalColumns[$colName] == 'idr') {
-    										echo '<td class="right bg-black"><b>IDR ' . number_format($total[$colName], 0, '.', ',') . '</b></td>';
+    									} else {
+    										echo '<td class="right bg-black"><b>' . strtoupper($showTotalColumns[$colName]) . ' ' . number_format($total[$colName], 0, '.', ',') . '</b></td>';
     									}
     									$dataFound = true;
     								} else {
@@ -133,7 +133,7 @@
 	    		<tr align="center">
 	    			<td class="left">{{ $no }}</td>
 	    			@foreach ($columns as $colName => $colData)
-	    				<?php 
+	    				<?php
 		    				$class = 'left';
 		    				// Check Edit Column to manipulate class & Data
 		    				if (is_object($colData) && $colData instanceof Closure) {
@@ -145,7 +145,7 @@
 		    				if (array_key_exists($colName, $editColumns)) {
 		    					if (isset($editColumns[$colName]['class'])) {
 		    						$class = $editColumns[$colName]['class'];
-		    					} 
+		    					}
 
 		    					if (isset($editColumns[$colName]['displayAs'])) {
 		    						$displayAs = $editColumns[$colName]['displayAs'];
@@ -176,8 +176,8 @@
 							<?php $dataFound = true; ?>
 							@if ($showTotalColumns[$colName] == 'point')
 								<td class="bg-black right"><b>{{ number_format($total[$colName], 0, '.', ',') }}</b></td>
-							@elseif ($showTotalColumns[$colName] == 'idr')
-								<td class="bg-black right"><b>IDR {{ number_format($total[$colName], 0, '.', ',') }}</b></td>
+							@else
+								<td class="bg-black right"><b>{{ strtoupper($showTotalColumns[$colName]) }} {{ number_format($total[$colName], 0, '.', ',') }}</b></td>
 							@endif
 						@else
 							@if ($dataFound)

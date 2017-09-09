@@ -78,7 +78,7 @@ public function displayReport(Request $request) {
                         'class' => 'right bold'
                     ])
                     ->showTotal([
-                        'Total Balance' => 'point'
+                        'Total Balance' => 'point' // if you want to show dollar sign ($) then use 'Total Balance' => '$'
                     ])
                     ->limit(20)
                     ->stream(); // or download('filename here..') to download pdf
@@ -87,7 +87,7 @@ public function displayReport(Request $request) {
 
 Note: For downloading to excel, just change `PdfReport` facade to `ExcelReport` facade no more modifications
 
-### Data Manipulation 
+### Data Manipulation
 ```php
 $columns = [
     'Name' => 'name',
@@ -159,7 +159,7 @@ Or, you can total all records by group using `groupBy` method
                         }
                     ])
                     ->editColumn('Total Balance', [
-                        'class' => 'right bold', 
+                        'class' => 'right bold',
                         'displayAs' => function($result) {
                             return thousandSeparator($result->balance);
                         }
@@ -187,7 +187,7 @@ Or, you can total all records by group using `groupBy` method
 
 **Description**: Set Paper Size
 
-**Params**: 
+**Params**:
 * $paper (Default: 'a4')
 
 **Usage:**
@@ -202,7 +202,7 @@ PdfReport::of($title, $meta, $queryBuilder, $columns)
 
 **Description**: Set a new custom styles with given selector and style to apply
 
-**Params**: 
+**Params**:
 * Array $styles (Key: $selector, Value: $style)
 
 **Usage:**
@@ -223,7 +223,7 @@ ExcelReport::of($title, $meta, $queryBuilder, $columns)
 
 **Description**: Set Orientation to Landscape or Portrait
 
-**Params**: 
+**Params**:
 * $orientation (Default: 'portrait')
 
 **Usage:**
