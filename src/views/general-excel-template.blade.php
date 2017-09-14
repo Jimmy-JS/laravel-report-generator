@@ -76,7 +76,7 @@
 	    		</tr>
     		</thead>
     		<?php
-    		$chunkRecordCount = ($limit == null || $limit > 300) ? 300 : $limit;
+    		$chunkRecordCount = ($limit == null || $limit > 5000) ? 5000 : $limit + 1;
     		$__env = isset($__env) ? $__env : null;
 			$query->chunk($chunkRecordCount, function($results) use(&$ctr, &$no, &$total, &$currentGroupByData, &$isOnSameGroup, $grandTotalSkip, $headers, $columns, $limit, $editColumns, $showTotalColumns, $groupByArr, $__env) {
 			?>

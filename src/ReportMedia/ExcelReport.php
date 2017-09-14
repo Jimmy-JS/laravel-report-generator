@@ -50,7 +50,7 @@ class ExcelReport extends ReportGenerator
 					$this->total[$column] = 0;
 				}
 
-	    		$chunkRecordCount = ($this->limit == null || $this->limit > 1000) ? 1000 : $this->limit;
+	    		$chunkRecordCount = ($this->limit == null || $this->limit > 5000) ? 5000 : $this->limit + 1;
 
 	    		$sheet->appendRow([$this->headers['title']]);
 
@@ -65,8 +65,8 @@ class ExcelReport extends ReportGenerator
 				$sheet->appendRow($columns);
 
 				$this->query->chunk($chunkRecordCount, function($results) use(&$ctr, $sheet) {
-					if ($this->limit != null && $ctr == $this->limit + 1) return false;
 					foreach ($results as $result) {
+						if ($this->limit != null && $ctr == $this->limit + 1) return false;
 						$formattedRows = $this->formatRow($result);
 						array_unshift($formattedRows, $ctr);
 						$sheet->appendRow($formattedRows);
