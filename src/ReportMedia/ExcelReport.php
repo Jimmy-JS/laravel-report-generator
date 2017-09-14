@@ -43,7 +43,6 @@ class ExcelReport extends ReportGenerator
 	{
         return App::make('excel')->create($filename, function($excel) use($filename) {
 		    $excel->sheet('Sheet 1', function($sheet) {
-				$groupByArr = $this->groupByArr;
 				$sheet->setColumnFormat(['A:Z' => '@']);
 				$ctr = 1;
 				foreach ($this->showTotalColumns as $column => $type) {

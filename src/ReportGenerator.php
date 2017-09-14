@@ -2,7 +2,7 @@
 
 namespace Jimmyjs\ReportGenerator;
 
-class ReportGenerator 
+class ReportGenerator
 {
 	protected $media = 'pdf';
 	protected $headers;
@@ -16,6 +16,7 @@ class ReportGenerator
 	protected $showTotalColumns = [];
 	protected $styles = [];
 	protected $simpleVersion = false;
+	protected $inRightOrder = false;
 
 	public function media($media)
 	{
@@ -40,6 +41,13 @@ class ReportGenerator
 	public function simple()
 	{
 		$this->simpleVersion = true;
+
+		return $this;
+	}
+
+	public function inRightOrder()
+	{
+		$this->inRightOrder = true;
 
 		return $this;
 	}
