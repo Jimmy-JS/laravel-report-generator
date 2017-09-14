@@ -88,6 +88,7 @@
 			    <div class="middle pb-10 title">
 			        {{ $headers['title'] }}
 			    </div>
+    			@if ($showMeta)
 				<div class="head-content">
 					<table cellpadding="0" cellspacing="0" width="100%" border="0">
 						<?php $metaCtr = 0; ?>
@@ -103,9 +104,11 @@
 						@endforeach
 					</table>
 				</div>
+				@endif
 		    </div>
 		    <div class="content">
 		    	<table width="100%" class="table">
+		    		@if ($showHeader)
 		    		<thead>
 			    		<tr>
 			    			<th class="left">No</th>
@@ -118,6 +121,7 @@
 			    			@endforeach
 			    		</tr>
 		    		</thead>
+		    		@endif
 		    		<?php
 		    		$chunkRecordCount = ($limit == null || $limit > 5000) ? 5000 : $limit + 1;
 		    		$__env = isset($__env) ? $__env : null;

@@ -17,8 +17,10 @@ class PdfReport extends ReportGenerator
 		$editColumns = $this->editColumns;
 		$showTotalColumns = $this->showTotalColumns;
 		$styles = $this->styles;
+		$showHeader = $this->showHeader;
+		$showMeta = $this->showMeta;
 
-		$html = \View::make('report-generator-view::general-pdf-template', compact('headers', 'columns', 'editColumns', 'showTotalColumns', 'styles', 'query', 'limit', 'groupByArr', 'orientation'))->render();
+		$html = \View::make('report-generator-view::general-pdf-template', compact('headers', 'columns', 'editColumns', 'showTotalColumns', 'styles', 'query', 'limit', 'groupByArr', 'orientation', 'showHeader', 'showMeta'))->render();
 
 		try {
 			$pdf = \App::make('snappy.pdf.wrapper');

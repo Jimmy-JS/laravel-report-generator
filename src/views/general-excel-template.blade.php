@@ -54,15 +54,18 @@
     	<table>
     		<tr>
     			<td colspan="{{ count($columns) + 1 }}" class="center"><h1>{{ $headers['title'] }}</h1></td>
-				@foreach($headers['meta'] as $name => $value)
-					<tr>
-						<td><b>{{ $name }}</b></td>
-						<td colspan="{{ count($columns) }}">{{ ucwords($value) }}</td>
-					</tr>
-				@endforeach
+    			@if ($showMeta)
+					@foreach($headers['meta'] as $name => $value)
+						<tr>
+							<td><b>{{ $name }}</b></td>
+							<td colspan="{{ count($columns) }}">{{ ucwords($value) }}</td>
+						</tr>
+					@endforeach
+				@endif
     		</tr>
     	</table>
     	<table>
+    		@if ($showHeader)
     		<thead>
 	    		<tr>
 	    			<th class="left">No</th>
@@ -75,6 +78,7 @@
 	    			@endforeach
 	    		</tr>
     		</thead>
+    		@endif
     		<?php
     		$chunkRecordCount = ($limit == null || $limit > 5000) ? 5000 : $limit + 1;
     		$__env = isset($__env) ? $__env : null;

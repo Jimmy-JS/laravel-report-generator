@@ -17,6 +17,8 @@ class ReportGenerator
 	protected $styles = [];
 	protected $simpleVersion = false;
 	protected $inRightOrder = false;
+    protected $showMeta = true;
+    protected $showHeader = true;
 
 	public function media($media)
 	{
@@ -37,6 +39,20 @@ class ReportGenerator
 
 		return $this;
 	}
+
+    public function showHeader($value = true)
+    {
+        $this->showHeader = $value;
+
+        return $this;
+    }
+
+    public function showMeta($value = true)
+    {
+        $this->showMeta = $value;
+
+        return $this;
+    }
 
 	public function simple()
 	{

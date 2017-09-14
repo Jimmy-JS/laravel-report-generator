@@ -32,9 +32,11 @@ class ExcelReport extends ReportGenerator
 				$editColumns = $this->editColumns;
 				$showTotalColumns = $this->showTotalColumns;
 				$styles = $this->styles;
+				$showHeader = $this->showHeader;
+				$showMeta = $this->showMeta;
 
 				$sheet->setColumnFormat(['A:Z' => '@']);
-		    	$sheet->loadView('report-generator-view::general-excel-template', compact('headers', 'columns', 'editColumns', 'showTotalColumns', 'styles', 'query', 'limit', 'groupByArr', 'orientation'));
+		    	$sheet->loadView('report-generator-view::general-excel-template', compact('headers', 'columns', 'editColumns', 'showTotalColumns', 'styles', 'query', 'limit', 'groupByArr', 'orientation', 'showHeader', 'showMeta'));
 		    });
         })->export($this->format);
 	}
@@ -52,16 +54,20 @@ class ExcelReport extends ReportGenerator
 	    		$chunkRecordCount = ($this->limit == null || $this->limit > 5000) ? 5000 : $this->limit + 1;
 
 	    		$sheet->appendRow([$this->headers['title']]);
-
 	    		$sheet->appendRow([' ']);
-	    		foreach ($this->headers['meta'] as $key => $value) {
-		    		$sheet->appendRow([$key, $value]);
-	    		}
 
-	    		$sheet->appendRow([' ']);
-	    		$columns = array_keys($this->columns);
-	    		array_unshift($columns, 'No');
-				$sheet->appendRow($columns);
+	    		if ($this->showMeta) {
+		    		foreach ($this->headers['meta'] as $key => $value) {
+			    		$sheet->appendRow([$key, $value]);
+		    		}
+		    		$sheet->appendRow([' ']);
+		    	}
+
+		    	if ($this->showHeader) {
+		    		$columns = array_keys($this->columns);
+		    		array_unshift($columns, 'No');
+					$sheet->appendRow($columns);
+				}
 
 				$this->query->chunk($chunkRecordCount, function($results) use(&$ctr, $sheet) {
 					foreach ($results as $result) {

@@ -8,22 +8,8 @@ use Jimmyjs\ReportGenerator\ReportGenerator;
 
 class CSVReport extends ReportGenerator
 {
-    private $showMeta = false;
-    private $showHeader = true;
-
-    public function showHeader($value = true)
-    {
-        $this->showHeader = $value;
-
-        return $this;
-    }
-
-    public function showMeta($value = true)
-    {
-        $this->showMeta = $value;
-
-        return $this;
-    }
+    protected $showMeta = false;
+    protected $showHeader = true;
 
     public function download($filename)
     {
@@ -36,8 +22,8 @@ class CSVReport extends ReportGenerator
         if ($this->showMeta) {
             foreach ($this->headers['meta'] as $key => $value) {
                 $csv->insertOne([$key, $value]);
-                $csv->insertOne([]);
             }
+            $csv->insertOne([' ']);
         }
 
         $ctr = 1;
