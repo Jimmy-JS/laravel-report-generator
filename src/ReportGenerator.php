@@ -4,7 +4,6 @@ namespace Jimmyjs\ReportGenerator;
 
 class ReportGenerator
 {
-	protected $media = 'pdf';
 	protected $headers;
 	protected $columns;
 	protected $query;
@@ -16,16 +15,9 @@ class ReportGenerator
 	protected $showTotalColumns = [];
 	protected $styles = [];
 	protected $simpleVersion = false;
-	protected $inRightOrder = false;
+	protected $withoutManipulation = false;
     protected $showMeta = true;
     protected $showHeader = true;
-
-	public function media($media)
-	{
-		$this->media = strtolower($media);
-
-		return $this;
-	}
 
 	public function of($title, Array $meta = [], $query, Array $columns)
 	{
@@ -61,9 +53,9 @@ class ReportGenerator
 		return $this;
 	}
 
-	public function inRightOrder()
+	public function withoutManipulation()
 	{
-		$this->inRightOrder = true;
+		$this->withoutManipulation = true;
 
 		return $this;
 	}

@@ -37,7 +37,7 @@ class CSVReport extends ReportGenerator
         $this->query->chunk($chunkRecordCount, function($results) use(&$ctr, $csv) {
             foreach ($results as $result) {
                 if ($this->limit != null && $ctr == $this->limit + 1) return false;
-                if ($this->inRightOrder) {
+                if ($this->withoutManipulation) {
                     $csv->insertOne($result->toArray());
                 } else {
                     $formattedRows = $this->formatRow($result);

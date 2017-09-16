@@ -71,25 +71,33 @@ class ExcelReport extends ReportGenerator
 
 				$this->query->chunk($chunkRecordCount, function($results) use(&$ctr, $sheet) {
 					foreach ($results as $result) {
-						if ($this->limit != null && $ctr == $this->limit + 1) return false;
-						$formattedRows = $this->formatRow($result);
-						array_unshift($formattedRows, $ctr);
-						$sheet->appendRow($formattedRows);
-						$ctr ++;
+		                if ($this->limit != null && $ctr == $this->limit + 1) return false;
+		                if ($this->withoutManipulation) {
+		                    $sheet->appendRow($result->toArray());
+		                } else {
+		                    $formattedRows = $this->formatRow($result);
+		                    array_unshift($formattedRows, $ctr);
+		                    $sheet->appendRow($formattedRows);
+		                }
+		                $ctr++;
 					}
 				});
 
-				if ($this->showTotalColumns != []) {
-					$totalRows = ['Grand Total'];
+				if ($this->showTotalColumns) {
+					$totalRows = collect(['Grand Total']);
 					array_shift($columns);
 					foreach ($columns as $columnName) {
 						if (array_key_exists($columnName, $this->showTotalColumns)) {
-							array_push($totalRows, number_format($this->total[$columnName], 0, '.', ','));
+							if ($this->showTotalColumns[$columnName] == 'point') {
+								$totalRows->push(number_format($this->total[$columnName], 0, '.', ','));
+							} else {
+								$totalRows->push(strtoupper($this->showTotalColumns[$columnName]) . ' ' . number_format($this->total[$columnName], 0, '.', ','));
+							}
 						} else {
-							array_push($totalRows, '');
+							$totalRows->push(null);
 						}
 					}
-					$sheet->appendRow($totalRows);
+					$sheet->appendRow($totalRows->toArray());
 				}
 		    });
         })->export($this->format);
