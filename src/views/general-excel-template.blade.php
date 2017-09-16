@@ -80,7 +80,7 @@
     		</thead>
     		@endif
     		<?php
-    		$chunkRecordCount = ($limit == null || $limit > 5000) ? 5000 : $limit + 1;
+    		$chunkRecordCount = ($limit == null || $limit > 50000) ? 50000 : $limit + 1;
     		$__env = isset($__env) ? $__env : null;
 			$query->chunk($chunkRecordCount, function($results) use(&$ctr, &$no, &$total, &$currentGroupByData, &$isOnSameGroup, $grandTotalSkip, $headers, $columns, $limit, $editColumns, $showTotalColumns, $groupByArr, $__env) {
 			?>

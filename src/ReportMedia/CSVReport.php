@@ -27,7 +27,7 @@ class CSVReport extends ReportGenerator
         }
 
         $ctr = 1;
-        $chunkRecordCount = ($this->limit == null || $this->limit > 5000) ? 5000 : $this->limit + 1;
+        $chunkRecordCount = ($this->limit == null || $this->limit > 50000) ? 50000 : $this->limit + 1;
 
         if ($this->showHeader) {
             $columns = array_keys($this->columns);
