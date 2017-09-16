@@ -20,7 +20,11 @@ class PdfReport extends ReportGenerator
 		$showHeader = $this->showHeader;
 		$showMeta = $this->showMeta;
 
-		$html = \View::make('report-generator-view::general-pdf-template', compact('headers', 'columns', 'editColumns', 'showTotalColumns', 'styles', 'query', 'limit', 'groupByArr', 'orientation', 'showHeader', 'showMeta'))->render();
+		if ($this->withoutManipulation) {
+			$html = \View::make('report-generator-view::without-manipulation-pdf-template', compact('headers', 'columns', 'showTotalColumns', 'query', 'limit', 'orientation', 'showHeader', 'showMeta'))->render();
+		} else {
+			$html = \View::make('report-generator-view::general-pdf-template', compact('headers', 'columns', 'editColumns', 'showTotalColumns', 'styles', 'query', 'limit', 'groupByArr', 'orientation', 'showHeader', 'showMeta'))->render();
+		}
 
 		try {
 			$pdf = \App::make('snappy.pdf.wrapper');

@@ -125,12 +125,12 @@
 		    		<?php
 		    		$chunkRecordCount = ($limit == null || $limit > 50000) ? 50000 : $limit + 1;
 		    		$__env = isset($__env) ? $__env : null;
-					$query->chunk($chunkRecordCount, function($results) use(&$ctr, &$no, &$total, &$currentGroupByData, &$isOnSameGroup, $grandTotalSkip, $headers, $columns, $limit, $editColumns, $showTotalColumns, $groupByArr, $__env) {
+					$query->chunk($chunkRecordCount, function($results) use(&$ctr, &$no, &$total, &$currentGroupByData, &$isOnSameGroup, $grandTotalSkip, $columns, $limit, $editColumns, $showTotalColumns, $groupByArr, $__env) {
 					?>
 		    		@foreach($results as $result)
 						<?php
 							if ($limit != null && $ctr == $limit + 1) return false;
-							if ($groupByArr != []) {
+							if ($groupByArr) {
 								$isOnSameGroup = true;
 								foreach ($groupByArr as $groupBy) {
 									if (is_object($columns[$groupBy]) && $columns[$groupBy] instanceof Closure) {
