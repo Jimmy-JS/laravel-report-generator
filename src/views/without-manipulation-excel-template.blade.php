@@ -82,8 +82,10 @@
                     @endforeach
                 </tr>
                 <?php
-                    foreach ($showTotalColumns as $showTotalColumn => $type) {
-                        $total[$showTotalColumn] += $result->{$columns[$showTotalColumn]};
+                    foreach ($columns as $colName => $colData) {
+                        if (array_key_exists($colName, $showTotalColumns)) {
+                            $total[$colName] += $result->{$colData};
+                        }
                     }
                     $ctr++; $no++;
                 ?>
