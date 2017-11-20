@@ -34,13 +34,14 @@ class ExcelReport extends ReportGenerator
 				$styles = $this->styles;
 				$showHeader = $this->showHeader;
 				$showMeta = $this->showMeta;
+				$applyFlush = $this->applyFlush;
 
 				$sheet->setColumnFormat(['A:Z' => '@']);
 
 				if ($this->withoutManipulation) {
-			    	$sheet->loadView('report-generator-view::without-manipulation-excel-template', compact('headers', 'columns', 'showTotalColumns', 'query', 'limit', 'orientation', 'showHeader', 'showMeta'));
+			    	$sheet->loadView('report-generator-view::without-manipulation-excel-template', compact('headers', 'columns', 'showTotalColumns', 'query', 'limit', 'orientation', 'showHeader', 'showMeta', 'applyFlush'));
 			    } else {
-			    	$sheet->loadView('report-generator-view::general-excel-template', compact('headers', 'columns', 'editColumns', 'showTotalColumns', 'styles', 'query', 'limit', 'groupByArr', 'orientation', 'showHeader', 'showMeta'));
+			    	$sheet->loadView('report-generator-view::general-excel-template', compact('headers', 'columns', 'editColumns', 'showTotalColumns', 'styles', 'query', 'limit', 'groupByArr', 'orientation', 'showHeader', 'showMeta', 'applyFlush'));
 			    }
 		    });
         })->export($this->format);
@@ -70,7 +71,9 @@ class ExcelReport extends ReportGenerator
 
 		    	if ($this->showHeader) {
 		    		$columns = array_keys($this->columns);
-		    		array_unshift($columns, 'No');
+		    		if (!$this->withoutManipulation) {
+			    		array_unshift($columns, 'No');
+			    	}
 					$sheet->appendRow($columns);
 				}
 
@@ -86,6 +89,8 @@ class ExcelReport extends ReportGenerator
 		                }
 		                $ctr++;
 					}
+
+					if ($this->applyFlush) flush();
 				});
 
 				if ($this->showTotalColumns) {

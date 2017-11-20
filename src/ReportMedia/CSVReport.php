@@ -2,8 +2,8 @@
 
 namespace Jimmyjs\ReportGenerator\ReportMedia;
 
-use App, Closure, Exception;
 use League\Csv\Writer;
+use App, Closure, Exception;
 use Jimmyjs\ReportGenerator\ReportGenerator;
 
 class CSVReport extends ReportGenerator
@@ -46,6 +46,8 @@ class CSVReport extends ReportGenerator
                 }
                 $ctr++;
             }
+
+            if ($this->applyFlush) flush();
         });
 
         $csv->output($filename . '.csv');
