@@ -1,5 +1,5 @@
 <?php
 
 return [
-    'flush' => true
+    'flush' => false
 ];
