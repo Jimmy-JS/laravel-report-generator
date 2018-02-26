@@ -99,9 +99,9 @@ class ExcelReport extends ReportGenerator
 					foreach ($columns as $columnName) {
 						if (array_key_exists($columnName, $this->showTotalColumns)) {
 							if ($this->showTotalColumns[$columnName] == 'point') {
-								$totalRows->push(number_format($this->total[$columnName], 0, '.', ','));
+								$totalRows->push(number_format($this->total[$columnName], 2, '.', ','));
 							} else {
-								$totalRows->push(strtoupper($this->showTotalColumns[$columnName]) . ' ' . number_format($this->total[$columnName], 0, '.', ','));
+								$totalRows->push(strtoupper($this->showTotalColumns[$columnName]) . ' ' . number_format($this->total[$columnName], 2, '.', ','));
 							}
 						} else {
 							$totalRows->push(null);

@@ -145,9 +145,9 @@
                                 @if (array_key_exists($colName, $showTotalColumns))
                                     <?php $dataFound = true; ?>
                                     @if ($showTotalColumns[$colName] == 'point')
-                                        <td class="left"><b>{{ number_format($total[$colName], 0, ',', '.') }}</b></td>
+                                        <td class="left"><b>{{ number_format($total[$colName], 2, '.', ',') }}</b></td>
                                     @else
-                                        <td class="left"><b>{{ strtoupper($showTotalColumns[$colName]) }} {{ number_format($total[$colName], 0, ',', '.') }}</b></td>
+                                        <td class="left"><b>{{ strtoupper($showTotalColumns[$colName]) }} {{ number_format($total[$colName], 2, '.', ',') }}</b></td>
                                     @endif
                                 @else
                                     @if ($dataFound)

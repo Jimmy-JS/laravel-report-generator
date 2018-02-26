@@ -112,9 +112,9 @@
     							foreach ($columns as $colName => $colData) {
     								if (array_key_exists($colName, $showTotalColumns)) {
     									if ($showTotalColumns[$colName] == 'point') {
-    										echo '<td class="right bg-black"><b>' . number_format($total[$colName], 0, '.', ',') . '</b></td>';
+    										echo '<td class="right bg-black"><b>' . number_format($total[$colName], 2, '.', ',') . '</b></td>';
     									} else {
-    										echo '<td class="right bg-black"><b>' . strtoupper($showTotalColumns[$colName]) . ' ' . number_format($total[$colName], 0, '.', ',') . '</b></td>';
+    										echo '<td class="right bg-black"><b>' . strtoupper($showTotalColumns[$colName]) . ' ' . number_format($total[$colName], 2, '.', ',') . '</b></td>';
     									}
     									$dataFound = true;
     								} else {
@@ -182,9 +182,9 @@
 						@if (array_key_exists($colName, $showTotalColumns))
 							<?php $dataFound = true; ?>
 							@if ($showTotalColumns[$colName] == 'point')
-								<td class="bg-black right"><b>{{ number_format($total[$colName], 0, '.', ',') }}</b></td>
+								<td class="bg-black right"><b>{{ number_format($total[$colName], 2, '.', ',') }}</b></td>
 							@else
-								<td class="bg-black right"><b>{{ strtoupper($showTotalColumns[$colName]) }} {{ number_format($total[$colName], 0, '.', ',') }}</b></td>
+								<td class="bg-black right"><b>{{ strtoupper($showTotalColumns[$colName]) }} {{ number_format($total[$colName], 2, '.', ',') }}</b></td>
 							@endif
 						@else
 							@if ($dataFound)
