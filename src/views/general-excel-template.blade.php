@@ -68,7 +68,9 @@
     		@if ($showHeader)
     		<thead>
 	    		<tr>
+				@if ($showNumColumn)
 	    			<th class="left">No</th>
+				@endif
 	    			@foreach ($columns as $colName => $colData)
 	    				@if (array_key_exists($colName, $editColumns))
 	    					<th class="{{ isset($editColumns[$colName]['class']) ? $editColumns[$colName]['class'] : 'left' }}">{{ $colName }}</th>
@@ -135,7 +137,9 @@
 	    			}
 				?>
 	    		<tr align="center">
+				@if ($showNumColumn)
 	    			<td class="left">{{ $no }}</td>
+				@endif
 	    			@foreach ($columns as $colName => $colData)
 	    				<?php
 		    				$class = 'left';
