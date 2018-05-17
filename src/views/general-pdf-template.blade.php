@@ -150,7 +150,7 @@
 
 				    			if ($isOnSameGroup === false) {
 		    						echo '<tr class="bg-black f-white">
-		    							<td colspan="' . $grandTotalSkip . '"><b>Grand Total</b></td>';
+		    							<td colspan="' . $grandTotalSkip . '"><b>Total</b></td>';
 										$dataFound = false;
 		    							foreach ($columns as $colName => $colData) {
 		    								if (array_key_exists($colName, $showTotalColumns)) {
