@@ -16,6 +16,7 @@ class ReportGenerator
 	protected $paper = 'a4';
 	protected $orientation = 'portrait';
 	protected $editColumns = [];
+	protected $showNumColumn = true;
 	protected $showTotalColumns = [];
 	protected $styles = [];
 	protected $simpleVersion = false;
@@ -51,6 +52,13 @@ class ReportGenerator
     public function showMeta($value = true)
     {
         $this->showMeta = $value;
+
+        return $this;
+    }
+	
+    public function showNumColumn($value = true)
+    {
+        $this->showNumColumn = $value;
 
         return $this;
     }

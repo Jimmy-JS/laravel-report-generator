@@ -35,13 +35,14 @@ class ExcelReport extends ReportGenerator
 				$showHeader = $this->showHeader;
 				$showMeta = $this->showMeta;
 				$applyFlush = $this->applyFlush;
+			        $showNumColumn = $this->showNumColumn;
 
 				$sheet->setColumnFormat(['A:Z' => '@']);
 
 				if ($this->withoutManipulation) {
-			    	$sheet->loadView('report-generator-view::without-manipulation-excel-template', compact('headers', 'columns', 'showTotalColumns', 'query', 'limit', 'orientation', 'showHeader', 'showMeta', 'applyFlush'));
+			    	$sheet->loadView('report-generator-view::without-manipulation-excel-template', compact('headers', 'columns', 'showTotalColumns', 'query', 'limit', 'orientation', 'showHeader', 'showMeta', 'applyFlush', 'showNumColumn'));
 			    } else {
-			    	$sheet->loadView('report-generator-view::general-excel-template', compact('headers', 'columns', 'editColumns', 'showTotalColumns', 'styles', 'query', 'limit', 'groupByArr', 'orientation', 'showHeader', 'showMeta', 'applyFlush'));
+			    	$sheet->loadView('report-generator-view::general-excel-template', compact('headers', 'columns', 'editColumns', 'showTotalColumns', 'styles', 'query', 'limit', 'groupByArr', 'orientation', 'showHeader', 'showMeta', 'applyFlush', 'showNumColumn'));
 			    }
 		    });
         })->export($this->format);
