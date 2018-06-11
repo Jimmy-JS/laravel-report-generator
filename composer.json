@@ -19,5 +19,12 @@
             "Jimmyjs\\ReportGenerator\\": "src/"
         }
     },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Jimmyjs\\ReportGenerator\\ServiceProvider"
+            ]
+        }
+    },
     "minimum-stability": "dev"
 }
