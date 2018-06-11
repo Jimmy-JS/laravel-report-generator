@@ -12,10 +12,16 @@ Then, add the ServiceProvider to the providers array in config/app.php
 
     Jimmyjs\ReportGenerator\ServiceProvider::class,
 
+**Optionally**, you can add this to your aliases array in config/app.php 
+
+    'PdfReport' => Jimmyjs\ReportGenerator\Facades\PdfReportFacade::class,
+    'ExcelReport' => Jimmyjs\ReportGenerator\Facades\ExcelReportFacade::class,
+    'CSVReport' => Jimmyjs\ReportGenerator\Facades\CSVReportFacade::class,
+
 ## Usage
 This package is make use of `chunk` method (Eloquent / Query Builder) so it can handle big data without memory exhausted.
 
-Also, You can use `PdfReport` or `ExcelReport` facade for shorter code that already registered as an alias.
+Also, You can use `PdfReport`, `ExcelReport` or `CSVReport` facade for shorter code that already registered as an alias.
 
 ### Example Display PDF Code
 ```php
@@ -230,5 +236,49 @@ ExcelReport::of($title, $meta, $queryBuilder, $columns)
 ```php
 PdfReport::of($title, $meta, $queryBuilder, $columns)
          ->setOrientation('landscape')
+         ->make();
+```
+
+### 4. withoutManipulation()
+**Supported Media Type**: PDF, Excel, CSV
+
+**Description**: Faster generating report, but all columns properties must be matched the selected column from SQL Queries
+
+**Usage:**
+```php
+$queryBuilder = Customer::select(['name', 'age'])->get();
+$columns = ['Name', 'Age'];
+PdfReport::of($title, $meta, $queryBuilder, $columns)
+         ->withoutManipulation()
+         ->make();
+```
+
+### 5. showMeta($value = true)
+**Supported Media Type**: PDF, Excel, CSV
+
+**Description**: Show / hide meta attribute on report
+
+**Params**:
+* $value (Default: true)
+
+**Usage:**
+```php
+PdfReport::of($title, $meta, $queryBuilder, $columns)
+         ->showMeta(false) // Hide meta
+         ->make();
+```
+
+### 6. showHeader($value = true)
+**Supported Media Type**: PDF, Excel, CSV
+
+**Description**: Show / hide column header on report
+
+**Params**:
+* $value (Default: true)
+
+**Usage:**
+```php
+PdfReport::of($title, $meta, $queryBuilder, $columns)
+         ->showHeader(false) // Hide column header
          ->make();
 ```
