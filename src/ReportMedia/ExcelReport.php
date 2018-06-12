@@ -35,7 +35,7 @@ class ExcelReport extends ReportGenerator
 				$showHeader = $this->showHeader;
 				$showMeta = $this->showMeta;
 				$applyFlush = $this->applyFlush;
-			        $showNumColumn = $this->showNumColumn;
+			    $showNumColumn = $this->showNumColumn;
 
 				$sheet->setColumnFormat(['A:Z' => '@']);
 
@@ -72,7 +72,7 @@ class ExcelReport extends ReportGenerator
 
 		    	if ($this->showHeader) {
 		    		$columns = array_keys($this->columns);
-		    		if (!$this->withoutManipulation) {
+		    		if (!$this->withoutManipulation && $this->showNumColumn) {
 			    		array_unshift($columns, 'No');
 			    	}
 					$sheet->appendRow($columns);
@@ -85,7 +85,7 @@ class ExcelReport extends ReportGenerator
 		                    $sheet->appendRow($result->toArray());
 		                } else {
 		                    $formattedRows = $this->formatRow($result);
-		                    array_unshift($formattedRows, $ctr);
+		                    if ($this->showNumColumn) array_unshift($formattedRows, $ctr);
 		                    $sheet->appendRow($formattedRows);
 		                }
 		                $ctr++;

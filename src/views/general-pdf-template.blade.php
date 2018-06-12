@@ -111,9 +111,9 @@
 		    		@if ($showHeader)
 		    		<thead>
 			    		<tr>
-						@if ($showNumColumn)
-			    			<th class="left">No</th>
-						@endif
+							@if ($showNumColumn)
+				    			<th class="left">No</th>
+							@endif
 			    			@foreach ($columns as $colName => $colData)
 			    				@if (array_key_exists($colName, $editColumns))
 			    					<th class="{{ isset($editColumns[$colName]['class']) ? $editColumns[$colName]['class'] : 'left' }}">{{ $colName }}</th>
@@ -127,7 +127,7 @@
 		    		<?php
 		    		$chunkRecordCount = ($limit == null || $limit > 50000) ? 50000 : $limit + 1;
 		    		$__env = isset($__env) ? $__env : null;
-					$query->chunk($chunkRecordCount, function($results) use(&$ctr, &$no, &$total, &$currentGroupByData, &$isOnSameGroup, $grandTotalSkip, $columns, $limit, $editColumns, $showTotalColumns, $groupByArr, $applyFlush, $__env) {
+					$query->chunk($chunkRecordCount, function($results) use(&$ctr, &$no, &$total, &$currentGroupByData, &$isOnSameGroup, $grandTotalSkip, $columns, $limit, $editColumns, $showTotalColumns, $groupByArr, $applyFlush, $showNumColumn, $__env) {
 					?>
 		    		@foreach($results as $result)
 						<?php
@@ -181,8 +181,8 @@
 						?>
 			    		<tr align="center" class="{{ ($no % 2 == 0) ? 'even' : 'odd' }}">
 			    			@if ($showNumColumn)
-						<td class="left">{{ $no }}</td>
-						@endif
+								<td class="left">{{ $no }}</td>
+							@endif
 			    			@foreach ($columns as $colName => $colData)
 			    				<?php
 				    				$class = 'left';
