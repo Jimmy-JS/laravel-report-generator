@@ -9,20 +9,20 @@ use Illuminate\Support\ServiceProvider as IlluminateServiceProvider;
 
 class ServiceProvider extends IlluminateServiceProvider
 {
-	/**
-	 * Indicates if loading of the provider is deferred.
-	 *
-	 * @var bool
-	 */
-	protected $defer = false;
+    /**
+     * Indicates if loading of the provider is deferred.
+     *
+     * @var bool
+     */
+    protected $defer = false;
 
-	/**
-	 * Register the service provider.
-	 *
-	 * @return void
-	 */
-	public function register()
-	{
+    /**
+     * Register the service provider.
+     *
+     * @return void
+     */
+    public function register()
+    {
         $configPath = __DIR__.'/../config/report-generator.php';
         $this->mergeConfigFrom($configPath, 'report-generator');
 
@@ -38,35 +38,39 @@ class ServiceProvider extends IlluminateServiceProvider
         $this->app->register('Maatwebsite\Excel\ExcelServiceProvider');
 
         $this->registerAliases();
-	}
+    }
 
-	public function boot()
-	{
-		$this->loadViewsFrom(__DIR__ . '/views', 'report-generator-view');
+    public function boot()
+    {
+        $this->loadViewsFrom(__DIR__ . '/views', 'report-generator-view');
 
-		$this->publishes([
-	        __DIR__.'/../config/report-generator.php' => config_path('report-generator.php')
-	    ], 'config');
-	}
+        $this->publishes([
+            __DIR__.'/../config/report-generator.php' => config_path('report-generator.php')
+        ], 'laravel-report:config');
 
-	protected function registerAliases()
-	{
-	    if (class_exists('Illuminate\Foundation\AliasLoader')) {
-	        $loader = \Illuminate\Foundation\AliasLoader::getInstance();
-	        $loader->alias('PdfReport', \Jimmyjs\ReportGenerator\Facades\PdfReportFacade::class);
-	        $loader->alias('ExcelReport', \Jimmyjs\ReportGenerator\Facades\ExcelReportFacade::class);
-	        $loader->alias('CSVReport', \Jimmyjs\ReportGenerator\Facades\CSVReportFacade::class);
-	    }
-	}
+        $this->publishes([
+            __DIR__.'/views' => resource_path('views/vendor/jimmyjs'),
+        ], 'laravel-report:view-template');
+    }
 
-	/**
-	 * Get the services provided by the provider.
-	 *
-	 * @return array
-	 */
-	public function provides()
-	{
-		return [];
-	}
+    protected function registerAliases()
+    {
+        if (class_exists('Illuminate\Foundation\AliasLoader')) {
+            $loader = \Illuminate\Foundation\AliasLoader::getInstance();
+            $loader->alias('PdfReport', \Jimmyjs\ReportGenerator\Facades\PdfReportFacade::class);
+            $loader->alias('ExcelReport', \Jimmyjs\ReportGenerator\Facades\ExcelReportFacade::class);
+            $loader->alias('CSVReport', \Jimmyjs\ReportGenerator\Facades\CSVReportFacade::class);
+        }
+    }
+
+    /**
+     * Get the services provided by the provider.
+     *
+     * @return array
+     */
+    public function provides()
+    {
+        return [];
+    }
 
 }
