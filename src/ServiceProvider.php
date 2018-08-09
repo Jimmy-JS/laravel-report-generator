@@ -42,14 +42,14 @@ class ServiceProvider extends IlluminateServiceProvider
 
     public function boot()
     {
-        $this->loadViewsFrom(__DIR__ . '/views', 'report-generator-view');
+        $this->loadViewsFrom(__DIR__ . '/views', 'laravel-report-generator');
 
         $this->publishes([
             __DIR__.'/../config/report-generator.php' => config_path('report-generator.php')
         ], 'laravel-report:config');
 
         $this->publishes([
-            __DIR__.'/views' => resource_path('views/vendor/jimmyjs'),
+            __DIR__.'/views' => resource_path('views/vendor/laravel-report-generator'),
         ], 'laravel-report:view-template');
     }
 
