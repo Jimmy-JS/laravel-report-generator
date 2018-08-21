@@ -12,7 +12,9 @@ Then, add the ServiceProvider to the providers array in config/app.php
 
     Jimmyjs\ReportGenerator\ServiceProvider::class,
 
-**Optionally**, you can add this to your aliases array in config/app.php 
+For more better speed on generating pdf report, I recommend you to use laravel snappy package. To using laravel snappy, you should install `wkhtmltopdf with v0.12.0` to work with this package [(Jump to wkhtmltopdf installation)](#wkhtmltopdf-installation)
+
+**Optionally**, you can add this to your aliases array in config/app.php
 
     'PdfReport' => Jimmyjs\ReportGenerator\Facades\PdfReportFacade::class,
     'ExcelReport' => Jimmyjs\ReportGenerator\Facades\ExcelReportFacade::class,
@@ -25,31 +27,26 @@ Also, You can use `PdfReport`, `ExcelReport` or `CSVReport` facade for shorter c
 
 ### Example Display PDF Code
 ```php
-// PdfReport Aliases
 use PdfReport;
 
-public function displayReport(Request $request) {
-    // Retrieve any filters
+public function displayReport(Request $request)
+{
     $fromDate = $request->input('from_date');
     $toDate = $request->input('to_date');
     $sortBy = $request->input('sort_by');
 
-    // Report title
-    $title = 'Registered User Report';
+    $title = 'Registered User Report'; // Report title
 
-    // For displaying filters description on header
-    $meta = [
+    $meta = [ // For displaying filters description on header
         'Registered on' => $fromDate . ' To ' . $toDate,
         'Sort By' => $sortBy
     ];
 
-    // Do some querying..
-    $queryBuilder = User::select(['name', 'balance', 'registered_at'])
+    $queryBuilder = User::select(['name', 'balance', 'registered_at']) // Do some querying..
                         ->whereBetween('registered_at', [$fromDate, $toDate])
                         ->orderBy($sortBy);
 
-    // Set Column to be displayed
-    $columns = [
+    $columns = [ // Set Column to be displayed
         'Name' => 'name',
         'Registered At', // if no column_name specified, this will automatically seach for snake_case of column name (will be registered_at) column from query result
         'Total Balance' => 'balance',
@@ -58,40 +55,26 @@ public function displayReport(Request $request) {
         }
     ];
 
-    /*
-        Generate Report with flexibility to manipulate column class even manipulate column value (using Carbon, etc).
-
-        - of()         : Init the title, meta (filters description to show), query, column (to be shown)
-        - editColumn() : To Change column class or manipulate its data for displaying to report
-        - editColumns(): Mass edit column
-        - showTotal()  : Used to sum all value on specified column on the last table (except using groupBy method). 'point' is a type for displaying total with a thousand separator
-        - groupBy()    : Show total of value on specific group. Used with showTotal() enabled.
-        - limit()      : Limit record to be showed
-        - make()       : Will producing DomPDF / SnappyPdf instance so you could do any other DomPDF / snappyPdf method such as stream() or download()
-    */
+    // Generate Report with flexibility to manipulate column class even manipulate column value (using Carbon, etc).
     return PdfReport::of($title, $meta, $queryBuilder, $columns)
-                    ->editColumn('Registered At', [
+                    ->editColumn('Registered At', [ // Change column class or manipulate its data for displaying to report
                         'displayAs' => function($result) {
                             return $result->registered_at->format('d M Y');
-                        }
+                        },
+                        'class' => 'left'
                     ])
-                    ->editColumn('Total Balance', [
-                        'displayAs' => function($result) {
-                            return thousandSeparator($result->balance);
-                        }
-                    ])
-                    ->editColumns(['Total Balance', 'Status'], [
+                    ->editColumns(['Total Balance', 'Status'], [ // Mass edit column
                         'class' => 'right bold'
                     ])
-                    ->showTotal([
+                    ->showTotal([ // Used to sum all value on specified column on the last table (except using groupBy method). 'point' is a type for displaying total with a thousand separator
                         'Total Balance' => 'point' // if you want to show dollar sign ($) then use 'Total Balance' => '$'
                     ])
-                    ->limit(20)
-                    ->stream(); // or download('filename here..') to download pdf
+                    ->limit(20) // Limit record to be showed
+                    ->stream(); // other available method: download('filename') to download pdf / make() that will producing DomPDF / SnappyPdf instance so you could do any other DomPDF / snappyPdf method such as stream() or download()
 }
 ```
 
-Note: For downloading to excel, just change `PdfReport` facade to `ExcelReport` facade no more modifications
+Note: For downloading to excel / CSV, just change `PdfReport` facade to `ExcelReport` / `CSVReport` facade with no more modifications
 
 ### Data Manipulation
 ```php
@@ -99,46 +82,45 @@ $columns = [
     'Name' => 'name',
     'Registered At' => 'registered_at',
     'Total Balance' => 'balance',
-    'Status' => function($result) { // You can do data manipulation, if statement or any action do you want inside this closure
-        return ($result->balance > 100000) ? 'Rich Man' : 'Normal Guy';
+    'Status' => function($customer) { // You can do data manipulation, if statement or any action do you want inside this closure
+        return ($customer->balance > 100000) ? 'Rich Man' : 'Normal Guy';
     }
 ];
 ```
 Will produce a same result with:
 ```php
 $columns = [
-    'Name' => function($result) {
-        return $result->name;
+    'Name' => function($customer) {
+        return $customer->name;
     },
-    'Registered At' => function($result) {
-        return $result->registered_at;
+    'Registered At' => function($customer) {
+        return $customer->registered_at;
     },
-    'Total Balance' => function($result) {
-        return $result->balance;
+    'Total Balance' => function($customer) {
+        return $customer->balance;
     },
-    'Status' => function($result) { // You can do if statement or any action do you want inside this closure
-        return ($result->balance > 100000) ? 'Rich Man' : 'Normal Guy';
+    'Status' => function($customer) { // You can do if statement or any action do you want inside this closure
+        return ($customer->balance > 100000) ? 'Rich Man' : 'Normal Guy';
     }
 ];
 ```
-So you can do some **eager loading relation** like:
+### Report Output
+![Report Output with Grand Total](https://raw.githubusercontent.com/Jimmy-JS/laravel-report-generator/master/screenshots/report-with-total.png)
 
+With this manipulation, you could do some **eager loading relation** like:
 ```php
-$post = Post::with('comment')->where('active', 1);
+$post = Post::with('comments')->where('active', 1);
 
 $columns = [
-    'Post Title' => function($result) {
-        return $result->title;
+    'Post Title' => function($post) {
+        return $post->title;
     },
     'Slug' => 'slug',
-    'Top Comment' => function($result) {
-        return $result->comment->body;
+    'Latest Comment' => function($post) {
+        return $post->comments->first()->body;
     }
 ];
 ```
-### Output Report
-![Output Report with Grand Total](https://raw.githubusercontent.com/Jimmy-JS/laravel-report-generator/master/screenshots/report-with-total.png)
-
 
 ### Example Code With Group By
 Or, you can total all records by group using `groupBy` method
@@ -149,8 +131,7 @@ Or, you can total all records by group using `groupBy` method
                         ->whereBetween('registered_at', [$fromDate, $toDate])
                         ->orderBy('registered_at', 'ASC'); // You should sort groupBy column to use groupBy() Method
 
-    // Set Column to be displayed
-    $columns = [
+    $columns = [ // Set Column to be displayed
         'Registered At' => 'registered_at',
         'Name' => 'name',
         'Total Balance' => 'balance',
@@ -158,6 +139,7 @@ Or, you can total all records by group using `groupBy` method
             return ($result->balance > 100000) ? 'Rich Man' : 'Normal Guy';
         }
     ];
+
     return PdfReport::of($title, $meta, $queryBuilder, $columns)
                     ->editColumn('Registered At', [
                         'displayAs' => function($result) {
@@ -173,7 +155,7 @@ Or, you can total all records by group using `groupBy` method
                     ->editColumn('Status', [
                         'class' => 'right bold',
                     ])
-                    ->groupBy('Registered At')
+                    ->groupBy('Registered At') // Show total of value on specific group. Used with showTotal() enabled.
                     ->showTotal([
                         'Total Balance' => 'point'
                     ])
@@ -184,6 +166,24 @@ Or, you can total all records by group using `groupBy` method
 
 ### Output Report With Group By Registered At
 ![Output Report with Group By Grand Total](https://raw.githubusercontent.com/Jimmy-JS/laravel-report-generator/master/screenshots/report-with-group-by.png)
+
+
+## Wkhtmltopdf Installation
+* Download wkhtmltopdf v.0.12.0 from https://github.com/wkhtmltopdf/wkhtmltopdf/releases/0.12.0 (For linux & windows) or https://github.com/yukihr/wkhtmltopdf-0.12.0-build-osx-10.9.1/blob/master/bin/wkhtmltopdf (For Mac)
+* Extract and move `wkhtmltopdf` file to `/usr/local/bin/` (on mac / linux) or Extract and move `wkhtmltopdf` file to `C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf`
+* `Run chmod a+x /usr/local/bin/wkhtmltopdf && chmod 777 /usr/local/bin/wkhtmltopdf` (For mac / linux only)
+* Test installation by typing `wkhtmltopdf` on your terminal or command prompt
+* Change your snappy config located in `/config/snappy.php` (run `php artisan vendor:publish` if `snappy.php` file is not created) to:
+```
+    'pdf' => array(
+        'enabled' => true,
+        'binary'  => '/usr/local/bin/wkhtmltopdf', // For Mac / Linux
+        // 'binary' => '"C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf"', // For Windows
+        'timeout' => false,
+        'options' => array(),
+        'env'     => array(),
+    ),
+```
 
 
 ## Other Method
@@ -281,4 +281,34 @@ PdfReport::of($title, $meta, $queryBuilder, $columns)
 PdfReport::of($title, $meta, $queryBuilder, $columns)
          ->showHeader(false) // Hide column header
          ->make();
+```
+
+### 7. showNumColumn($value = true)
+**Supported Media Type**: PDF, Excel, CSV
+
+**Description**: Show / hide number column on report
+
+**Params**:
+* $value (Default: true)
+
+**Usage:**
+```php
+PdfReport::of($title, $meta, $queryBuilder, $columns)
+         ->showNumColumn(false) // Hide number column
+         ->make();
+```
+
+### 8. simple()
+**Supported Media Type**: Excel
+
+**Description**: Generate excel in simple mode (no styling on generated excel report, but faster in generating report)
+
+**Params**:
+* -
+
+**Usage:**
+```php
+ExcelReport::of($title, $meta, $queryBuilder, $columns)
+         ->simple()
+         ->download('filename');
 ```
