@@ -151,24 +151,26 @@
 				    			}
 
 				    			if ($isOnSameGroup === false) {
-		    						echo '<tr class="bg-black f-white">
-		    							<td colspan="' . $grandTotalSkip . '"><b>Grand Total</b></td>';
-										$dataFound = false;
-		    							foreach ($columns as $colName => $colData) {
-		    								if (array_key_exists($colName, $showTotalColumns)) {
-		    									if ($showTotalColumns[$colName] == 'point') {
-		    										echo '<td class="right"><b>' . number_format($total[$colName], 2, '.', ',') . '</b></td>';
-		    									} else {
-		    										echo '<td class="right"><b>' . strtoupper($showTotalColumns[$colName]) . ' ' . number_format($total[$colName], 2, '.', ',') . '</b></td>';
-		    									}
-		    									$dataFound = true;
-		    								} else {
-		    									if ($dataFound) {
-			    									echo '<td></td>';
-			    								}
+		    						echo '<tr class="bg-black f-white">';
+		                            if ($showNumColumn || $grandTotalSkip > 1) {
+		                                echo '<td colspan="{{ !$showNumColumn ? $grandTotalSkip - 1 : $grandTotalSkip }}"><b>Grand Total</b></td>';
+		                            }
+									$dataFound = false;
+	    							foreach ($columns as $colName => $colData) {
+	    								if (array_key_exists($colName, $showTotalColumns)) {
+	    									if ($showTotalColumns[$colName] == 'point') {
+	    										echo '<td class="right"><b>' . number_format($total[$colName], 2, '.', ',') . '</b></td>';
+	    									} else {
+	    										echo '<td class="right"><b>' . strtoupper($showTotalColumns[$colName]) . ' ' . number_format($total[$colName], 2, '.', ',') . '</b></td>';
+	    									}
+	    									$dataFound = true;
+	    								} else {
+	    									if ($dataFound) {
+		    									echo '<td></td>';
 		    								}
-		    							}
-		    						echo '</tr>';//<tr style="height: 10px;"><td colspan="99">&nbsp;</td></tr>';
+	    								}
+	    							}
+		    						echo '</tr>';
 
 									// Reset No, Reset Grand Total
 		    						$no = 1;
@@ -223,7 +225,9 @@
 		            ?>
 					@if ($showTotalColumns != [] && $ctr > 1)
 						<tr class="bg-black f-white">
-							<td colspan="{{ $grandTotalSkip }}"><b>Grand Total</b></td> {{-- For Number --}}
+                            @if ($showNumColumn || $grandTotalSkip > 1)
+                                <td colspan="{{ !$showNumColumn ? $grandTotalSkip - 1 : $grandTotalSkip }}"><b>Grand Total</b></td> {{-- For Number --}}
+                            @endif
 							<?php $dataFound = false; ?>
 							@foreach ($columns as $colName => $colData)
 								@if (array_key_exists($colName, $showTotalColumns))
