@@ -9,7 +9,6 @@ use Jimmyjs\ReportGenerator\ReportGenerator;
 class CSVReport extends ReportGenerator
 {
     protected $showMeta = false;
-    protected $showHeader = true;
 
     public function download($filename)
     {
@@ -31,6 +30,9 @@ class CSVReport extends ReportGenerator
 
         if ($this->showHeader) {
             $columns = array_keys($this->columns);
+            if (!$this->withoutManipulation && $this->showNumColumn) {
+                array_unshift($columns, 'No');
+            }
             $csv->insertOne($columns);
         }
 
@@ -41,7 +43,7 @@ class CSVReport extends ReportGenerator
                     $csv->insertOne($result->toArray());
                 } else {
                     $formattedRows = $this->formatRow($result);
-                    array_unshift($formattedRows, $ctr);
+                    if ($this->showNumColumn) array_unshift($formattedRows, $ctr);
                     $csv->insertOne($formattedRows);
                 }
                 $ctr++;
