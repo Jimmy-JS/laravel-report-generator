@@ -27,6 +27,9 @@
                 border-style: none none ridge none;
                 font-size: 18px;
             }
+            thead { display: table-header-group; }
+            tfoot { display: table-row-group; }
+            tr { page-break-inside: avoid; }
             table.table {
                 font-size: 13px;
                 border-collapse: collapse;

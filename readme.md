@@ -12,7 +12,7 @@ Then, add the ServiceProvider to the providers array in config/app.php
 
     Jimmyjs\ReportGenerator\ServiceProvider::class,
 
-For more better speed on generating pdf report, I recommend you to use laravel snappy package. To using laravel snappy, you should install `wkhtmltopdf with v0.12.0` to work with this package [(Jump to wkhtmltopdf installation)](#wkhtmltopdf-installation)
+For more better speed on generating pdf report, I recommend you to use laravel snappy package. To using laravel snappy, you should install `wkhtmltopdf` to work with this package [(Jump to wkhtmltopdf installation)](#wkhtmltopdf-installation)
 
 **Optionally**, you can add this to your aliases array in config/app.php
 
@@ -169,16 +169,12 @@ Or, you can total all records by group using `groupBy` method
 
 
 ## Wkhtmltopdf Installation
-* Download wkhtmltopdf v.0.12.0 from https://github.com/wkhtmltopdf/wkhtmltopdf/releases/0.12.0 (For linux & windows) or https://github.com/yukihr/wkhtmltopdf-0.12.0-build-osx-10.9.1/blob/master/bin/wkhtmltopdf (For Mac)
-* Extract and move `wkhtmltopdf` file to `/usr/local/bin/` (on mac / linux) or Extract and move `wkhtmltopdf` file to `C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf`
-* `Run chmod a+x /usr/local/bin/wkhtmltopdf && chmod 777 /usr/local/bin/wkhtmltopdf` (For mac / linux only)
-* Test installation by typing `wkhtmltopdf` on your terminal or command prompt
+* Download wkhtmltopdf from https://wkhtmltopdf.org/downloads.html
 * Change your snappy config located in `/config/snappy.php` (run `php artisan vendor:publish` if `snappy.php` file is not created) to:
 ```
     'pdf' => array(
         'enabled' => true,
-        'binary'  => '/usr/local/bin/wkhtmltopdf', // For Mac / Linux
-        // 'binary' => '"C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf"', // For Windows
+        'binary'  => '/usr/local/bin/wkhtmltopdf', // Or specified your custom wkhtmltopdf path
         'timeout' => false,
         'options' => array(),
         'env'     => array(),
@@ -304,7 +300,7 @@ PdfReport::of($title, $meta, $queryBuilder, $columns)
 **Description**: Generate excel in simple mode (no styling on generated excel report, but faster in generating report)
 
 **Params**:
-* -
+* None
 
 **Usage:**
 ```php
