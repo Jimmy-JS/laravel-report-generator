@@ -24,9 +24,22 @@ class ExcelReport extends ReportGenerator
 			    $excel->sheet('Sheet 1', function($sheet) {
 					$sheet->setColumnFormat(['A:Z' => '@']);
 					$ctr = 1;
+					$grandTotalSkip = 1;
+					$currentGroupByData = [];
+					$isOnSameGroup = true;
 					foreach ($this->showTotalColumns as $column => $type) {
 						$this->total[$column] = 0;
 					}
+					if ($this->showTotalColumns != []) {
+						foreach ($this->columns as $colName => $colData) {
+							if (!array_key_exists($colName, $this->showTotalColumns)) {
+								$grandTotalSkip++;
+							} else {
+								break;
+							}
+						}
+					}
+			        $grandTotalSkip = !$this->showNumColumn ? $grandTotalSkip - 1 : $grandTotalSkip;
 
 		    		$chunkRecordCount = ($this->limit == null || $this->limit > 50000) ? 50000 : $this->limit + 1;
 
@@ -48,9 +61,51 @@ class ExcelReport extends ReportGenerator
 						$sheet->appendRow($columns);
 					}
 
-					$this->query->chunk($chunkRecordCount, function($results) use(&$ctr, $sheet) {
+					$this->query->chunk($chunkRecordCount, function($results) use(&$ctr, $columns, $grandTotalSkip, $currentGroupByData, $isOnSameGroup, $sheet) {
 						foreach ($results as $result) {
 			                if ($this->limit != null && $ctr == $this->limit + 1) return false;
+							if ($this->groupByArr) {
+								$isOnSameGroup = true;
+								foreach ($this->groupByArr as $groupBy) {
+									if (is_object($this->columns[$groupBy]) && $this->columns[$groupBy] instanceof Closure) {
+				    					$thisGroupByData[$groupBy] = $this->columns[$groupBy]($result);
+				    				} else {
+				    					$thisGroupByData[$groupBy] = $result->{$this->columns[$groupBy]};
+				    				}
+
+				    				if (isset($currentGroupByData[$groupBy])) {
+				    					if ($thisGroupByData[$groupBy] != $currentGroupByData[$groupBy]) {
+				    						$isOnSameGroup = false;
+				    					}
+				    				}
+
+				    				$currentGroupByData[$groupBy] = $thisGroupByData[$groupBy];
+				    			}
+
+				    			if ($isOnSameGroup === false) {
+				    				$totalRows = collect(['Grand Total']);
+				    				foreach ($columns as $columnName) {
+				    					if ($columnName == $columns[0]) continue;
+				    					if (array_key_exists($columnName, $this->showTotalColumns)) {
+				    						if ($this->showTotalColumns[$columnName] == 'point') {
+				    							$totalRows->push(number_format($this->total[$columnName], 2, '.', ','));
+				    						} else {
+				    							$totalRows->push(strtoupper($this->showTotalColumns[$columnName]) . ' ' . number_format($this->total[$columnName], 2, '.', ','));
+				    						}
+				    					} else {
+				    						$totalRows->push(null);
+				    					}
+				    				}
+				    				$sheet->appendRow($totalRows->toArray());
+
+									// Reset No, Reset Grand Total
+		    						$no = 1;
+		    						foreach ($this->showTotalColumns as $showTotalColumn => $type) {
+		    							$this->total[$showTotalColumn] = 0;
+		    						}
+		    						$isOnSameGroup = true;
+		    					}
+			    			}
 			                if ($this->withoutManipulation) {
 			                    $sheet->appendRow($result->toArray());
 			                } else {
@@ -58,6 +113,10 @@ class ExcelReport extends ReportGenerator
 			                    if ($this->showNumColumn) array_unshift($formattedRows, $ctr);
 			                    $sheet->appendRow($formattedRows);
 			                }
+
+                            foreach ($this->showTotalColumns as $colName => $type) {
+                                $this->total[$colName] += $result->{$this->columns[$colName]};
+                            }
 			                $ctr++;
 						}
 
@@ -102,7 +161,7 @@ class ExcelReport extends ReportGenerator
 					$sheet->setColumnFormat(['A:Z' => '@']);
 
 					if ($this->withoutManipulation) {
-				    	$sheet->loadView('laravel-report-generator::without-manipulation-excel-template', compact('headers', 'columns', 'showTotalColumns', 'query', 'limit', 'orientation', 'showHeader', 'showMeta', 'applyFlush', 'showNumColumn'));
+				    	$sheet->loadView('laravel-report-generator::without-manipulation-excel-template', compact('headers', 'columns', 'showTotalColumns', 'query', 'limit', 'groupByArr', 'orientation', 'showHeader', 'showMeta', 'applyFlush', 'showNumColumn'));
 				    } else {
 				    	$sheet->loadView('laravel-report-generator::general-excel-template', compact('headers', 'columns', 'editColumns', 'showTotalColumns', 'styles', 'query', 'limit', 'groupByArr', 'orientation', 'showHeader', 'showMeta', 'applyFlush', 'showNumColumn'));
 				    }

@@ -67,10 +67,10 @@
 		<?php
 		$ctr = 1;
 		$no = 1;
-		$currentGroupByData = [];
 		$total = [];
-		$isOnSameGroup = true;
 		$grandTotalSkip = 1;
+		$currentGroupByData = [];
+		$isOnSameGroup = true;
 
 		foreach ($showTotalColumns as $column => $type) {
 			$total[$column] = 0;
@@ -85,6 +85,8 @@
 				}
 			}
 		}
+
+        $grandTotalSkip = !$showNumColumn ? $grandTotalSkip - 1 : $grandTotalSkip;
 		?>
 		<div class="wrapper">
 		    <div class="pb-5">
@@ -130,7 +132,7 @@
 		    		<?php
 		    		$chunkRecordCount = ($limit == null || $limit > 50000) ? 50000 : $limit + 1;
 		    		$__env = isset($__env) ? $__env : null;
-					$query->chunk($chunkRecordCount, function($results) use(&$ctr, &$no, &$total, &$currentGroupByData, &$isOnSameGroup, $grandTotalSkip, $columns, $limit, $editColumns, $showTotalColumns, $groupByArr, $applyFlush, $showNumColumn, $__env) {
+					$query->chunk($chunkRecordCount, function($results) use(&$ctr, &$no, &$total, &$currentGroupByData, &$isOnSameGroup, $groupByArr, $grandTotalSkip, $columns, $limit, $editColumns, $showTotalColumns, $applyFlush, $showNumColumn, $__env) {
 					?>
 		    		@foreach($results as $result)
 						<?php
@@ -144,6 +146,7 @@
 				    					$thisGroupByData[$groupBy] = $result->{$columns[$groupBy]};
 				    				}
 
+
 				    				if (isset($currentGroupByData[$groupBy])) {
 				    					if ($thisGroupByData[$groupBy] != $currentGroupByData[$groupBy]) {
 				    						$isOnSameGroup = false;
@@ -156,7 +159,7 @@
 				    			if ($isOnSameGroup === false) {
 		    						echo '<tr class="bg-black f-white">';
 		                            if ($showNumColumn || $grandTotalSkip > 1) {
-		                                echo '<td colspan="{{ !$showNumColumn ? $grandTotalSkip - 1 : $grandTotalSkip }}"><b>Grand Total</b></td>';
+		                                echo '<td colspan="' . $grandTotalSkip . '"><b>Grand Total</b></td>';
 		                            }
 									$dataFound = false;
 	    							foreach ($columns as $colName => $colData) {
@@ -229,7 +232,7 @@
 					@if ($showTotalColumns != [] && $ctr > 1)
 						<tr class="bg-black f-white">
                             @if ($showNumColumn || $grandTotalSkip > 1)
-                                <td colspan="{{ !$showNumColumn ? $grandTotalSkip - 1 : $grandTotalSkip }}"><b>Grand Total</b></td> {{-- For Number --}}
+                                <td colspan="{{ $grandTotalSkip }}"><b>Grand Total</b></td> {{-- For Number --}}
                             @endif
 							<?php $dataFound = false; ?>
 							@foreach ($columns as $colName => $colData)
