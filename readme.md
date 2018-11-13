@@ -8,17 +8,17 @@ Add package to your composer:
 
     composer require jimmyjs/laravel-report-generator
 
-Then, add the ServiceProvider to the providers array in config/app.php
+If you are running Laravel > 5.5 that's all you need to do. If you are using Laravel < 5.5 add the ServiceProvider to the providers array in config/app.php
 
     Jimmyjs\ReportGenerator\ServiceProvider::class,
-
-For more better speed on generating pdf report, I recommend you to use laravel snappy package. To using laravel snappy, you should install `wkhtmltopdf` to work with this package [(Jump to wkhtmltopdf installation)](#wkhtmltopdf-installation)
 
 **Optionally**, you can add this to your aliases array in config/app.php
 
     'PdfReport' => Jimmyjs\ReportGenerator\Facades\PdfReportFacade::class,
     'ExcelReport' => Jimmyjs\ReportGenerator\Facades\ExcelReportFacade::class,
     'CSVReport' => Jimmyjs\ReportGenerator\Facades\CSVReportFacade::class,
+
+For more better speed on generating pdf report, I recommend you to use laravel snappy package. To using laravel snappy, you should install `wkhtmltopdf` to work with this package [(Jump to wkhtmltopdf installation)](#wkhtmltopdf-installation)
 
 ## Usage
 This package is make use of `chunk` method (Eloquent / Query Builder) so it can handle big data without memory exhausted.
