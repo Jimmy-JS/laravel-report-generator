@@ -49,7 +49,7 @@ class ServiceProvider extends IlluminateServiceProvider
         ], 'laravel-report:config');
 
         $this->publishes([
-            __DIR__.'/views' => resource_path('views/vendor/laravel-report-generator'),
+            __DIR__.'/views' => base_path('resources/views/vendor/laravel-report-generator')
         ], 'laravel-report:view-template');
     }
 

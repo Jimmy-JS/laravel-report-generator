@@ -1,7 +1,7 @@
-# Laravel Report Generators (PDF & Excel)
-Rapidly Generate Simple Pdf Report on Laravel (Using [barryvdh/laravel-dompdf](https://github.com/barryvdh/laravel-dompdf) or [barryvdh/laravel-snappy](https://github.com/barryvdh/laravel-snappy)) or Excel Report (using [Maatwebsite/Laravel-Excel](https://github.com/Maatwebsite/Laravel-Excel))
+# Laravel Report Generators (PDF, CSV & Excel)
+Rapidly Generate Simple Pdf Report on Laravel (Using [barryvdh/laravel-dompdf](https://github.com/barryvdh/laravel-dompdf) or [barryvdh/laravel-snappy](https://github.com/barryvdh/laravel-snappy)) or CSV / Excel Report (using [Maatwebsite/Laravel-Excel](https://github.com/Maatwebsite/Laravel-Excel))
 
-This package provides a simple pdf & excel report generators to speed up your workflow
+This package provides a simple pdf, csv & excel report generators to speed up your workflow
 
 ## Installation
 Add package to your composer:
