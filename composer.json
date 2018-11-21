@@ -23,7 +23,12 @@
         "laravel": {
             "providers": [
                 "Jimmyjs\\ReportGenerator\\ServiceProvider"
-            ]
+            ],
+            "aliases": {
+                "PdfReport": "Jimmyjs\\ReportGenerator\\Facades\\PdfReportFacade",
+                "ExcelReport": "Jimmyjs\\ReportGenerator\\Facades\\ExcelReportFacade",
+                "CSVReport": "Jimmyjs\\ReportGenerator\\Facades\\CSVReportFacade::class"
+            }
         }
     },
     "minimum-stability": "dev"
