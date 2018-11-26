@@ -42,6 +42,10 @@ class ServiceProvider extends IlluminateServiceProvider
 
     public function boot()
     {
+        if ($this->isLumen()) {
+            require_once 'Lumen.php';
+        }
+
         $this->loadViewsFrom(__DIR__ . '/views', 'laravel-report-generator');
 
         $this->publishes([
@@ -73,4 +77,8 @@ class ServiceProvider extends IlluminateServiceProvider
         return [];
     }
 
+    protected function isLumen()
+    {
+        return str_contains($this->app->version(), 'Lumen');
+    }
 }
