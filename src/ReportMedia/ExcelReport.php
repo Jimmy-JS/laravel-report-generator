@@ -107,7 +107,9 @@ class ExcelReport extends ReportGenerator
 		    					}
 			    			}
 			                if ($this->withoutManipulation) {
-			                    $sheet->appendRow($result->toArray());
+			                    $data = $result->toArray();
+			                    if (count($data) > count($this->columns)) array_pop($data);
+			                    $sheet->appendRow($data);
 			                } else {
 			                    $formattedRows = $this->formatRow($result);
 			                    if ($this->showNumColumn) array_unshift($formattedRows, $ctr);

@@ -40,7 +40,9 @@ class CSVReport extends ReportGenerator
             foreach ($results as $result) {
                 if ($this->limit != null && $ctr == $this->limit + 1) return false;
                 if ($this->withoutManipulation) {
-                    $csv->insertOne($result->toArray());
+                    $data = $result->toArray();
+                    if (count($data) > count($this->columns)) array_pop($data);
+                    $csv->insertOne($data);
                 } else {
                     $formattedRows = $this->formatRow($result);
                     if ($this->showNumColumn) array_unshift($formattedRows, $ctr);

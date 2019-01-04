@@ -181,7 +181,11 @@
                             @if ($showNumColumn)
                                 <td class="left">{{ $no }}</td>
                             @endif
-                            @foreach ($result->toArray() as $rowData)
+                            <?php
+                                $data = $result->toArray();
+                                if (count($data) > count($columns)) array_pop($data);
+                            ?>
+                            @foreach ($data as $rowData)
                                 <td class="left">{{ $rowData }}</td>
                             @endforeach
                         </tr>
