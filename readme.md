@@ -20,8 +20,16 @@ If you are running Laravel > 5.5 that's all you need to do. If you are using Lar
 
 For more better speed on generating pdf report, I recommend you to use laravel snappy package. To using laravel snappy, you should install `wkhtmltopdf` to work with this package [(Jump to wkhtmltopdf installation)](#wkhtmltopdf-installation)
 
-## Usage
-This package is make use of `chunk` method (Eloquent / Query Builder) so it can handle big data without memory exhausted.
+## Information
+
+This package can use either `cursor` or `chunk` method (Eloquent / Query Builder) so it can handle big data faster than chunk and minimizing memory usage.
+
+Method | On Version
+--- | ---
+chunk() | 1.0.*
+cursor() | ^1.1.0
+
+Find the comparison between `chunk` and `cursor` in [a link](https://qiita.com/ryo511/items/ebcd1c1b2ad5addc5c9d)
 
 Also, You can use `PdfReport`, `ExcelReport` or `CSVReport` facade for shorter code that already registered as an alias.
 

@@ -75,13 +75,10 @@
             </thead>
             @endif
             <?php
-            $chunkRecordCount = ($limit == null || $limit > 50000) ? 50000 : $limit + 1;
             $__env = isset($__env) ? $__env : null;
-            $query->chunk($chunkRecordCount, function($results) use(&$ctr, &$no, &$total, &$currentGroupByData, &$isOnSameGroup, $groupByArr, $grandTotalSkip, $columns, $limit, $showTotalColumns, $applyFlush, $showNumColumn, $__env) {
             ?>
-            @foreach($results as $result)
+            @foreach($query->take($limit ?: null)->cursor() as $result)
                 <?php
-                    if ($limit != null && $ctr == $limit + 1) return false;
                     if ($groupByArr != []) {
                         $isOnSameGroup = true;
                         foreach ($groupByArr as $groupBy) {
@@ -150,10 +147,6 @@
                     $ctr++; $no++;
                 ?>
             @endforeach
-            <?php
-            if ($applyFlush) flush();
-            });
-            ?>
             @if ($showTotalColumns != [] && $ctr > 1)
                 <tr class="f-white">
                     <td colspan="{{ $grandTotalSkip }}" class="bg-black"><b>Grand Total</b></td> {{-- For Number --}}

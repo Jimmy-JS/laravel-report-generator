@@ -41,8 +41,6 @@ class ExcelReport extends ReportGenerator
 					}
 			        $grandTotalSkip = !$this->showNumColumn ? $grandTotalSkip - 1 : $grandTotalSkip;
 
-		    		$chunkRecordCount = ($this->limit == null || $this->limit > 50000) ? 50000 : $this->limit + 1;
-
 		    		$sheet->appendRow([$this->headers['title']]);
 		    		$sheet->appendRow([' ']);
 
@@ -61,69 +59,64 @@ class ExcelReport extends ReportGenerator
 						$sheet->appendRow($columns);
 					}
 
-					$this->query->chunk($chunkRecordCount, function($results) use(&$ctr, $columns, $grandTotalSkip, $currentGroupByData, $isOnSameGroup, $sheet) {
-						foreach ($results as $result) {
-			                if ($this->limit != null && $ctr == $this->limit + 1) return false;
-							if ($this->groupByArr) {
-								$isOnSameGroup = true;
-								foreach ($this->groupByArr as $groupBy) {
-									if (is_object($this->columns[$groupBy]) && $this->columns[$groupBy] instanceof Closure) {
-				    					$thisGroupByData[$groupBy] = $this->columns[$groupBy]($result);
-				    				} else {
-				    					$thisGroupByData[$groupBy] = $result->{$this->columns[$groupBy]};
-				    				}
+					foreach($this->query->take($this->limit ?: null)->cursor() as $result) {
+						if ($this->groupByArr) {
+							$isOnSameGroup = true;
+							foreach ($this->groupByArr as $groupBy) {
+								if (is_object($this->columns[$groupBy]) && $this->columns[$groupBy] instanceof Closure) {
+			    					$thisGroupByData[$groupBy] = $this->columns[$groupBy]($result);
+			    				} else {
+			    					$thisGroupByData[$groupBy] = $result->{$this->columns[$groupBy]};
+			    				}
 
-				    				if (isset($currentGroupByData[$groupBy])) {
-				    					if ($thisGroupByData[$groupBy] != $currentGroupByData[$groupBy]) {
-				    						$isOnSameGroup = false;
-				    					}
-				    				}
+			    				if (isset($currentGroupByData[$groupBy])) {
+			    					if ($thisGroupByData[$groupBy] != $currentGroupByData[$groupBy]) {
+			    						$isOnSameGroup = false;
+			    					}
+			    				}
 
-				    				$currentGroupByData[$groupBy] = $thisGroupByData[$groupBy];
-				    			}
-
-				    			if ($isOnSameGroup === false) {
-				    				$totalRows = collect(['Grand Total']);
-				    				foreach ($columns as $columnName) {
-				    					if ($columnName == $columns[0]) continue;
-				    					if (array_key_exists($columnName, $this->showTotalColumns)) {
-				    						if ($this->showTotalColumns[$columnName] == 'point') {
-				    							$totalRows->push(number_format($this->total[$columnName], 2, '.', ','));
-				    						} else {
-				    							$totalRows->push(strtoupper($this->showTotalColumns[$columnName]) . ' ' . number_format($this->total[$columnName], 2, '.', ','));
-				    						}
-				    					} else {
-				    						$totalRows->push(null);
-				    					}
-				    				}
-				    				$sheet->appendRow($totalRows->toArray());
-
-									// Reset No, Reset Grand Total
-		    						$no = 1;
-		    						foreach ($this->showTotalColumns as $showTotalColumn => $type) {
-		    							$this->total[$showTotalColumn] = 0;
-		    						}
-		    						$isOnSameGroup = true;
-		    					}
+			    				$currentGroupByData[$groupBy] = $thisGroupByData[$groupBy];
 			    			}
-			                if ($this->withoutManipulation) {
-			                    $data = $result->toArray();
-			                    if (count($data) > count($this->columns)) array_pop($data);
-			                    $sheet->appendRow($data);
-			                } else {
-			                    $formattedRows = $this->formatRow($result);
-			                    if ($this->showNumColumn) array_unshift($formattedRows, $ctr);
-			                    $sheet->appendRow($formattedRows);
-			                }
 
-                            foreach ($this->showTotalColumns as $colName => $type) {
-                                $this->total[$colName] += $result->{$this->columns[$colName]};
-                            }
-			                $ctr++;
-						}
+			    			if ($isOnSameGroup === false) {
+			    				$totalRows = collect(['Grand Total']);
+			    				foreach ($columns as $columnName) {
+			    					if ($columnName == $columns[0]) continue;
+			    					if (array_key_exists($columnName, $this->showTotalColumns)) {
+			    						if ($this->showTotalColumns[$columnName] == 'point') {
+			    							$totalRows->push(number_format($this->total[$columnName], 2, '.', ','));
+			    						} else {
+			    							$totalRows->push(strtoupper($this->showTotalColumns[$columnName]) . ' ' . number_format($this->total[$columnName], 2, '.', ','));
+			    						}
+			    					} else {
+			    						$totalRows->push(null);
+			    					}
+			    				}
+			    				$sheet->appendRow($totalRows->toArray());
 
-						if ($this->applyFlush) flush();
-					});
+								// Reset No, Reset Grand Total
+	    						$no = 1;
+	    						foreach ($this->showTotalColumns as $showTotalColumn => $type) {
+	    							$this->total[$showTotalColumn] = 0;
+	    						}
+	    						$isOnSameGroup = true;
+	    					}
+		    			}
+		                if ($this->withoutManipulation) {
+		                    $data = $result->toArray();
+		                    if (count($data) > count($this->columns)) array_pop($data);
+		                    $sheet->appendRow($data);
+		                } else {
+		                    $formattedRows = $this->formatRow($result);
+		                    if ($this->showNumColumn) array_unshift($formattedRows, $ctr);
+		                    $sheet->appendRow($formattedRows);
+		                }
+
+                        foreach ($this->showTotalColumns as $colName => $type) {
+                            $this->total[$colName] += $result->{$this->columns[$colName]};
+                        }
+		                $ctr++;
+					}
 
 					if ($this->showTotalColumns) {
 						$totalRows = collect(['Grand Total']);

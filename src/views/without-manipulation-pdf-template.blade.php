@@ -121,11 +121,9 @@
                     </thead>
                     @endif
                     <?php
-                    $chunkRecordCount = ($limit == null || $limit > 50000) ? 50000 : $limit + 1;
                     $__env = isset($__env) ? $__env : null;
-                    $query->chunk($chunkRecordCount, function($results) use(&$ctr, &$no, &$total, &$currentGroupByData, &$isOnSameGroup, $groupByArr, $grandTotalSkip, $columns, $limit, $showTotalColumns, $applyFlush, $showNumColumn, $__env) {
                     ?>
-                    @foreach($results as $result)
+                    @foreach($query->when($limit, function($qry) use($limit) { $qry->take($limit); })->cursor() as $result)
                         <?php
                             if ($limit != null && $ctr == $limit + 1) return false;
                             if ($groupByArr) {
@@ -196,10 +194,6 @@
                             $ctr++; $no++;
                         ?>
                     @endforeach
-                    <?php
-                    if ($applyFlush) flush();
-                    });
-                    ?>
                     @if ($showTotalColumns != [] && $ctr > 1)
                         <tr class="bg-black f-white">
                             @if ($showNumColumn || $grandTotalSkip > 1)
