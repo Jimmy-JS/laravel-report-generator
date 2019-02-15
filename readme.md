@@ -29,7 +29,7 @@ Method | On Version
 chunk() | 1.0.*
 cursor() | ^1.1.0
 
-Find the comparison between `chunk` and `cursor` in [a link](https://qiita.com/ryo511/items/ebcd1c1b2ad5addc5c9d)
+Find the comparison between `chunk` and `cursor` in [here](https://qiita.com/ryo511/items/ebcd1c1b2ad5addc5c9d)
 
 Also, You can use `PdfReport`, `ExcelReport` or `CSVReport` facade for shorter code that already registered as an alias.
 
