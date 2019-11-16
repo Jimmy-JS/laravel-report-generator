@@ -3,7 +3,6 @@
 namespace Jimmyjs\ReportGenerator;
 
 use Config;
-use Illuminate\Contracts\Config\Repository as ConfigRepository;
 
 class ReportGenerator
 {
@@ -55,7 +54,7 @@ class ReportGenerator
 
         return $this;
     }
-	
+
     public function showNumColumn($value = true)
     {
         $this->showNumColumn = $value;
