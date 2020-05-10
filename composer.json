@@ -10,9 +10,9 @@
         }
     ],
     "require": {
-        "php": ">=5.5.9",
-        "illuminate/support": "*",
-        "maatwebsite/excel": "~2.1.0"
+        "php": ">=7.1.0",
+        "illuminate/support": ">=5.0",
+        "maatwebsite/excel": "^3.1"
     },
     "autoload": {
         "psr-4": {

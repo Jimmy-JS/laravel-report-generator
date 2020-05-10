@@ -2,6 +2,7 @@
 
 namespace Jimmyjs\ReportGenerator;
 
+use Illuminate\Support\Str;
 use Jimmyjs\ReportGenerator\ReportMedia\CSVReport;
 use Jimmyjs\ReportGenerator\ReportMedia\PdfReport;
 use Jimmyjs\ReportGenerator\ReportMedia\ExcelReport;
@@ -79,6 +80,6 @@ class ServiceProvider extends IlluminateServiceProvider
 
     protected function isLumen()
     {
-        return str_contains($this->app->version(), 'Lumen');
+        return Str::contains($this->app->version(), 'Lumen');
     }
 }

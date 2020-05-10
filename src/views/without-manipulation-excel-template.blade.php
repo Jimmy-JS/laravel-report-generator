@@ -51,15 +51,15 @@
         <table>
             <tr>
                 <td colspan="{{ count($columns) + 1 }}" class="center"><h1>{{ $headers['title'] }}</h1></td>
-                @if ($showMeta)
-                    @foreach($headers['meta'] as $name => $value)
-                        <tr>
-                            <td><b>{{ $name }}</b></td>
-                            <td colspan="{{ count($columns) }}">{{ ucwords($value) }}</td>
-                        </tr>
-                    @endforeach
-                @endif
             </tr>
+            @if ($showMeta)
+                @foreach($headers['meta'] as $name => $value)
+                    <tr>
+                        <td><b>{{ $name }}</b></td>
+                        <td colspan="{{ count($columns) }}">{{ ucwords($value) }}</td>
+                    </tr>
+                @endforeach
+            @endif
         </table>
         <table>
             @if ($showHeader)
@@ -73,6 +73,7 @@
                     @endforeach
                 </tr>
             </thead>
+            <tbody>
             @endif
             <?php
             $__env = isset($__env) ? $__env : null;
@@ -167,6 +168,7 @@
                     @endforeach
                 </tr>
             @endif
+            </tbody>
         </table>
     </body>
 </html>
