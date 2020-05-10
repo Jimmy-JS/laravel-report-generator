@@ -3,6 +3,14 @@ Rapidly Generate Simple Pdf Report on Laravel (Using [barryvdh/laravel-dompdf](h
 
 This package provides a simple pdf, csv & excel report generators to speed up your workflow
 
+## Version
+| Version | Laravel Version | Php Version | Maatwebsite/Excel Ver | Feature
+|------|---------|-------|--------|-------
+| 1.0  | <= 5.6  | <=7.0 | ~2.1.0 | using `chunk()` to handle big data
+| 1.1  | <= 5.6  | <=7.0 | ~2.1.0 | using `cursor()` to handle big data
+| 2.0  | \>= 5.5 | ^7.0  |  ^3.1  | Using new version of maatwebsite (v3.1)
+Find the comparison between `chunk` and `cursor` in [here](https://qiita.com/ryo511/items/ebcd1c1b2ad5addc5c9d)
+
 ## Installation
 Add package to your composer:
 
@@ -19,19 +27,6 @@ If you are running Laravel > 5.5 that's all you need to do. If you are using Lar
     'CSVReport' => Jimmyjs\ReportGenerator\Facades\CSVReportFacade::class,
 
 For more better speed on generating pdf report, I recommend you to use laravel snappy package. To using laravel snappy, you should install `wkhtmltopdf` to work with this package [(Jump to wkhtmltopdf installation)](#wkhtmltopdf-installation)
-
-## Information
-
-This package can use either `cursor` or `chunk` method (Eloquent / Query Builder) so it can handle big data faster than chunk and minimizing memory usage.
-
-Method | On Version
---- | ---
-chunk() | 1.0.*
-cursor() | ^1.1.0
-
-Find the comparison between `chunk` and `cursor` in [here](https://qiita.com/ryo511/items/ebcd1c1b2ad5addc5c9d)
-
-Also, You can use `PdfReport`, `ExcelReport` or `CSVReport` facade for shorter code that already registered as an alias.
 
 ### Example Display PDF Code
 ```php
