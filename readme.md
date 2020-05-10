@@ -9,6 +9,7 @@ This package provides a simple pdf, csv & excel report generators to speed up yo
 | 1.0  | <= 5.6  | <=7.0 | ~2.1.0 | using `chunk()` to handle big data
 | 1.1  | <= 5.6  | <=7.0 | ~2.1.0 | using `cursor()` to handle big data
 | 2.0  | \>= 5.5 | ^7.0  |  ^3.1  | Using new version of maatwebsite (v3.1)
+
 Find the comparison between `chunk` and `cursor` in [here](https://qiita.com/ryo511/items/ebcd1c1b2ad5addc5c9d)
 
 ## Installation
