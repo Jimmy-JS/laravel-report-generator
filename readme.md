@@ -15,17 +15,23 @@ Find the comparison between `chunk` and `cursor` in [here](https://qiita.com/ryo
 ## Installation
 Add package to your composer:
 
+```bash
     composer require jimmyjs/laravel-report-generator
+```
 
 If you are running Laravel > 5.5 that's all you need to do. If you are using Laravel < 5.5 add the ServiceProvider to the providers array in config/app.php
 
+```php
     Jimmyjs\ReportGenerator\ServiceProvider::class,
+```
 
 **Optionally**, you can add this to your aliases array in config/app.php
 
+```php
     'PdfReport' => Jimmyjs\ReportGenerator\Facades\PdfReportFacade::class,
     'ExcelReport' => Jimmyjs\ReportGenerator\Facades\ExcelReportFacade::class,
     'CSVReport' => Jimmyjs\ReportGenerator\Facades\CSVReportFacade::class,
+```
 
 For more better speed on generating pdf report, I recommend you to use laravel snappy package. To using laravel snappy, you should install `wkhtmltopdf` to work with this package [(Jump to wkhtmltopdf installation)](#wkhtmltopdf-installation)
 
@@ -175,7 +181,7 @@ Or, you can total all records by group using `groupBy` method
 ## Wkhtmltopdf Installation
 * Download wkhtmltopdf from https://wkhtmltopdf.org/downloads.html
 * Change your snappy config located in `/config/snappy.php` (run `php artisan vendor:publish` if `snappy.php` file is not created) to:
-```
+```php
     'pdf' => array(
         'enabled' => true,
         'binary'  => '/usr/local/bin/wkhtmltopdf', // Or specified your custom wkhtmltopdf path
