@@ -162,7 +162,7 @@ Or, you can total all records by group using `groupBy` method
                     ->groupBy('Registered At') // Show total of value on specific group. Used with showTotal() enabled.
                     ->showTotal([
                         'Total Balance' => [
-                            'function' => 'sum', // Allow Values sum and avg
+                            'function' => 'sum', // Allow Values sum and avg or function($total)
                             'format' => 'point'
                     ])
                     ->stream();
