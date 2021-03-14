@@ -161,7 +161,9 @@ Or, you can total all records by group using `groupBy` method
                     ])
                     ->groupBy('Registered At') // Show total of value on specific group. Used with showTotal() enabled.
                     ->showTotal([
-                        'Total Balance' => 'point'
+                        'Total Balance' => [
+                            'function' => 'sum', // Allow Values sum and avg
+                            'format' => 'point'
                     ])
                     ->stream();
 ```
@@ -311,4 +313,18 @@ PdfReport::of($title, $meta, $queryBuilder, $columns)
 ExcelReport::of($title, $meta, $queryBuilder, $columns)
          ->simple()
          ->download('filename');
+```
+### 9. setTotalLabel($label)
+**Supported Media Type**: PDF, Excel
+
+**Description**: Set Label for Total
+
+**Params**:
+* None
+
+**Usage:**
+```php
+ExcelReport::of($title, $meta, $queryBuilder, $columns)
+         ->setTotalLabel('Average')
+         >make();
 ```
