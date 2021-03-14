@@ -117,15 +117,22 @@
                                 if (array_key_exists($colName, $showTotalColumns)) {
 
                                     if (array_key_exists('function', $showTotalColumns[$colName])){
-                                        if ($showTotalColumns[$colName]['function'] == 'avg') {
-                                            $total[$colName] = round($total[$colName] / $no, 2);
+                                        $function = $showTotalColumns[$colName]['function'];
+                                        if (is_object($function) && $function instanceof Closure){
+                                            $total[$colName] = $function($total);
+                                        } else {
+                                            if ($showTotalColumns[$colName]['function'] == 'avg') {
+                                                $total[$colName] = round($total[$colName] / $no, 2);
+                                            }
                                         }
                                     }
 
-                                    if (array_key_exists('format',$showTotalColumns[$colName]) && $showTotalColumns[$colName]['format'] == 'point') {
-                                        echo '<td class="right bg-black"><b>' . number_format($total[$colName], 2, '.', ',') . '</b></td>';
-                                    } else {
-                                        echo '<td class="right bg-black"><b>' . strtoupper($showTotalColumns[$colName]) . ' ' . number_format($total[$colName], 2, '.', ',') . '</b></td>';
+                                    if (array_key_exists('format',$showTotalColumns[$colName])){
+                                        if ($showTotalColumns[$colName]['format'] == 'point') {
+                                            echo '<td class="right bg-black"><b>' . number_format($total[$colName], 2, '.', ',') . '</b></td>';
+                                        } else {
+                                            echo '<td class="right bg-black"><b>' . strtoupper($showTotalColumns[$colName]) . ' ' . number_format($total[$colName], 2, '.', ',') . '</b></td>';
+                                        }
                                     }
                                     $dataFound = true;
                                 } else {
