@@ -226,13 +226,20 @@
 					@if ($showTotalColumns != [] && $ctr > 1)
 						<tr class="bg-black f-white">
                             @if ($showNumColumn || $grandTotalSkip > 1)
-                                <td colspan="{{ $grandTotalSkip }}"><b>Grand Total</b></td> {{-- For Number --}}
+                                <td colspan="{{ $grandTotalSkip }}"><b>{{ $totalLabel }}</b></td> {{-- For Number --}}
                             @endif
 							<?php $dataFound = false; ?>
 							@foreach ($columns as $colName => $colData)
 								@if (array_key_exists($colName, $showTotalColumns))
 									<?php $dataFound = true; ?>
-									@if ($showTotalColumns[$colName] == 'point')
+									<?php
+                                        if (array_key_exists('function', $showTotalColumns[$colName])){
+                                            if ($showTotalColumns[$colName]['function'] == 'avg') {
+                                                $total[$colName] = round($total[$colName] / $no, 2);
+                                            }
+                                        }
+                                        ?>
+									@if (array_key_exists('format',$showTotalColumns[$colName]) && $showTotalColumns[$colName] == 'point')
 										<td class="right"><b>{{ number_format($total[$colName], 2, '.', ',') }}</b></td>
 									@else
 										<td class="right"><b>{{ strtoupper($showTotalColumns[$colName]) }} {{ number_format($total[$colName], 2, '.', ',') }}</b></td>

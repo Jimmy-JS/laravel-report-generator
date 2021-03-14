@@ -23,6 +23,7 @@ class ReportGenerator
 	protected $withoutManipulation = false;
     protected $showMeta = true;
     protected $showHeader = true;
+    protected $totalLabel = 'Grand Total';
 
 	public function __construct()
 	{
@@ -99,6 +100,11 @@ class ReportGenerator
 		return $this;
 	}
 
+	public function setTotalLabel(string $label) {
+	    $this->totalLabel = $label;
+        return $this;
+    }
+
 	public function editColumn($columnName, Array $options)
 	{
 		foreach ($options as $option => $value) {
@@ -123,6 +129,8 @@ class ReportGenerator
 
 		return $this;
 	}
+
+
 
 	public function groupBy($column)
 	{

@@ -110,12 +110,19 @@
                         if ($isOnSameGroup === false) {
                             echo '<tr class="f-white">';
                             if ($showNumColumn || $grandTotalSkip > 1) {
-                                echo '<td class="bg-black" colspan="' . $grandTotalSkip . '"><b>Grand Total</b></td>';
+                                echo '<td class="bg-black" colspan="' . $grandTotalSkip . '"><b>{{ $totalLabel }} </b></td>';
                             }
                             $dataFound = false;
                             foreach ($columns as $colName => $colData) {
                                 if (array_key_exists($colName, $showTotalColumns)) {
-                                    if ($showTotalColumns[$colName] == 'point') {
+
+                                    if (array_key_exists('function', $showTotalColumns[$colName])){
+                                        if ($showTotalColumns[$colName]['function'] == 'avg') {
+                                            $total[$colName] = round($total[$colName] / $no, 2);
+                                        }
+                                    }
+
+                                    if (array_key_exists('format',$showTotalColumns[$colName]) && $showTotalColumns[$colName]['format'] == 'point') {
                                         echo '<td class="right bg-black"><b>' . number_format($total[$colName], 2, '.', ',') . '</b></td>';
                                     } else {
                                         echo '<td class="right bg-black"><b>' . strtoupper($showTotalColumns[$colName]) . ' ' . number_format($total[$colName], 2, '.', ',') . '</b></td>';
