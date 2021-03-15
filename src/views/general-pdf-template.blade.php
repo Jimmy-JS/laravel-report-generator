@@ -176,7 +176,7 @@
 												if ($showTotalColumns[$colName]['format'] == 'point') {
 													echo '<td class="right"><b>' . number_format($total[$colName], 2, '.', ',') . '</b></td>';
 												} else {
-													echo '<td class="right"><b>' . strtoupper($showTotalColumns[$colName]) . ' ' . number_format($total[$colName], 2, '.', ',') . '</b></td>';
+													echo '<td class="right"><b>' . strtoupper($showTotalColumns[$colName]['format']) . ' ' . number_format($total[$colName], 2, '.', ',') . '</b></td>';
 												}
                                             }
 	    									$dataFound = true;
