@@ -10,13 +10,17 @@ class CSVReport extends ReportGenerator
 {
     protected $showMeta = false;
 
-    public function download($filename)
+    public function download($filename, $save = false)
     {
         if (!class_exists(Writer::class)) {
             throw new Exception('Please install league/csv to generate CSV Report!');
         }
 
-        $csv = Writer::createFromFileObject(new \SplTempFileObject());
+        if ($save) {
+            $csv = Writer::createFromPath($filename, 'w');
+        } else {
+            $csv = Writer::createFromFileObject(new \SplTempFileObject());
+        }
 
         if ($this->showMeta) {
             foreach ($this->headers['meta'] as $key => $value) {
@@ -48,7 +52,14 @@ class CSVReport extends ReportGenerator
             $ctr++;
         }
 
-        $csv->output($filename . '.csv');
+        if (!$save) {
+            $csv->output($filename . '.csv');
+        }
+    }
+
+    public function store($filename)
+    {
+        $this->download($filename, true);
     }
 
     private function formatRow($result)

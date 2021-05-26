@@ -29,7 +29,7 @@ class ReportGenerator
 		$this->applyFlush = (bool) Config::get('report-generator.flush', true);
 	}
 
-	public function of($title, Array $meta = [], $query, Array $columns)
+	public function of($title, Array $meta, $query, Array $columns)
 	{
 		$this->headers = [
 			'title' => $title,
