@@ -55,4 +55,11 @@ class PdfReport extends ReportGenerator
 	{
 		return $this->make()->download($filename . '.pdf');
 	}
+
+	public function store($filePath)
+	{
+      $content = $this->make()->download()->getOriginalContent();
+
+      \Storage::put($filePath, $content);
+	}
 }

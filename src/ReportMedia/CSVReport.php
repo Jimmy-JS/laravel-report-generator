@@ -17,7 +17,8 @@ class CSVReport extends ReportGenerator
         }
 
         if ($save) {
-            $csv = Writer::createFromPath($filename, 'w');
+            $filePath = $filename;
+            $csv = Writer::createFromPath($filePath, 'w');
         } else {
             $csv = Writer::createFromFileObject(new \SplTempFileObject());
         }

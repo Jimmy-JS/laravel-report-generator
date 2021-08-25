@@ -1,7 +1,8 @@
 # Laravel Report Generators (PDF, CSV & Excel)
 Rapidly Generate Simple Pdf Report on Laravel (Using [barryvdh/laravel-dompdf](https://github.com/barryvdh/laravel-dompdf) or [barryvdh/laravel-snappy](https://github.com/barryvdh/laravel-snappy)) or CSV / Excel Report (using [Maatwebsite/Laravel-Excel](https://github.com/Maatwebsite/Laravel-Excel))
 
-This package provides a simple pdf, csv & excel report generators to speed up your workflow
+This package provides a simple pdf, csv & excel report generators to speed up your workflow.
+It also allows you to stream(), download(), or store() the report seamlessly.
 
 ## Version
 | Version | Laravel Version | Php Version | Maatwebsite/Excel Ver | Feature
@@ -86,7 +87,7 @@ public function displayReport(Request $request)
                         'Total Balance' => 'point' // if you want to show dollar sign ($) then use 'Total Balance' => '$'
                     ])
                     ->limit(20) // Limit record to be showed
-                    ->stream(); // other available method: download('filename') to download pdf / make() that will producing DomPDF / SnappyPdf instance so you could do any other DomPDF / snappyPdf method such as stream() or download()
+                    ->stream(); // other available method: store('path/to/file.pdf') to save to disk, download('filename') to download pdf / make() that will producing DomPDF / SnappyPdf instance so you could do any other DomPDF / snappyPdf method such as stream() or download()
 }
 ```
 

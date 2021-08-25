@@ -66,6 +66,11 @@ class ExcelReport extends ReportGenerator
         return new ExportView($view);
     }
 
+    public function store($filePath, $customDisk = null){
+        $export = $this->make();
+        Excel::store($export, $filePath, $customDisk);
+    }
+
     public function download($filename)
     {
         $export = $this->make();
