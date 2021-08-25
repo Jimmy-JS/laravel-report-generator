@@ -2,6 +2,7 @@
 
 namespace Jimmyjs\ReportGenerator\ReportMedia;
 
+use Config;
 use Jimmyjs\ReportGenerator\ReportGenerator;
 
 class PdfReport extends ReportGenerator
@@ -28,12 +29,13 @@ class PdfReport extends ReportGenerator
 			$html = \View::make('laravel-report-generator::general-pdf-template', compact('headers', 'columns', 'editColumns', 'showTotalColumns', 'styles', 'query', 'limit', 'groupByArr', 'orientation', 'showHeader', 'showMeta', 'applyFlush', 'showNumColumn'))->render();
 		}
 
-		try {
+		$pdfLibrary = Config::get('report-generator.pdfLibrary', 'snappy');
+		if ($pdfLibrary === 'snappy') {
 			$pdf = \App::make('snappy.pdf.wrapper');
 			$pdf->setOption('footer-font-size', 10);
 			$pdf->setOption('footer-left', 'Page [page] of [topage]');
 			$pdf->setOption('footer-right', 'Date Printed: ' . date('d M Y H:i:s'));
-		} catch (\ReflectionException $e) {
+		} else if ($pdfLibrary === 'dompdf') {
 			try {
 				$pdf = \App::make('dompdf.wrapper');
 			} catch (\ReflectionException $e) {

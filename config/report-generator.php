@@ -1,5 +1,6 @@
 <?php
 
 return [
-    'flush' => false
+    'flush' => false,
+    'pdfLibrary' => 'snappy' // snappy, dompdf
 ];

@@ -27,7 +27,19 @@ If you are running Laravel > 5.5 that's all you need to do. If you are using Lar
     'ExcelReport' => Jimmyjs\ReportGenerator\Facades\ExcelReportFacade::class,
     'CSVReport' => Jimmyjs\ReportGenerator\Facades\CSVReportFacade::class,
 
-For more better speed on generating pdf report, I recommend you to use laravel snappy package. To using laravel snappy, you should install `wkhtmltopdf` to work with this package [(Jump to wkhtmltopdf installation)](#wkhtmltopdf-installation)
+**Optionally**, You can publish the config file (then it will be available in `config/report-generator.php`)
+
+    php artisan vendor:publish --provider="Jimmyjs\ReportGenerator\ServiceProvider"
+
+If you want to generate a pdf report, please install either dompdf / snappy pdf. 
+This package will automatically use snappy pdf. If you want to use dompdf then please change `config/report-generator.php`:
+
+    return [
+        'flush' => false,
+        'pdfLibrary' => 'dompdf'
+    ];
+
+For better speed on generating pdf report, I recommend you to use laravel snappy package. To using laravel snappy, you should install `wkhtmltopdf` to work with this package [(Jump to wkhtmltopdf installation)](#wkhtmltopdf-installation)
 
 ### Example Display PDF Code
 ```php
