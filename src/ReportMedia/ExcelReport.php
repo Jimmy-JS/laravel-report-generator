@@ -54,13 +54,14 @@ class ExcelReport extends ReportGenerator
         $styles           = $this->styles;
         $showHeader       = $this->showHeader;
         $showMeta         = $this->showMeta;
+        $totalLabel = $this->totalLabel;
         $applyFlush       = $this->applyFlush;
         $showNumColumn    = $this->showNumColumn;
 
         if ($this->withoutManipulation) {
-            $view = view('laravel-report-generator::without-manipulation-excel-template', compact('headers', 'columns', 'showTotalColumns', 'query', 'limit', 'groupByArr', 'orientation', 'showHeader', 'showMeta', 'applyFlush', 'showNumColumn'));
+            $view = view('laravel-report-generator::without-manipulation-excel-template', compact('headers', 'columns', 'showTotalColumns', 'query', 'limit', 'groupByArr', 'orientation', 'showHeader', 'showMeta', 'applyFlush', 'showNumColumn', 'totalLabel'));
         } else {
-            $view = view('laravel-report-generator::general-excel-template', compact('headers', 'columns', 'editColumns', 'showTotalColumns', 'styles', 'query', 'limit', 'groupByArr', 'orientation', 'showHeader', 'showMeta', 'applyFlush', 'showNumColumn'));
+            $view = view('laravel-report-generator::general-excel-template', compact('headers', 'columns', 'editColumns', 'showTotalColumns', 'styles', 'query', 'limit', 'groupByArr', 'orientation', 'showHeader', 'showMeta', 'applyFlush', 'showNumColumn', 'totalLabel'));
         }
 
         return new ExportView($view);

@@ -110,15 +110,29 @@
                         if ($isOnSameGroup === false) {
                             echo '<tr class="f-white">';
                             if ($showNumColumn || $grandTotalSkip > 1) {
-                                echo '<td class="bg-black" colspan="' . $grandTotalSkip . '"><b>Grand Total</b></td>';
+                                echo '<td class="bg-black" colspan="' . $grandTotalSkip . '"><b>'.$totalLabel.'</b></td>';
                             }
                             $dataFound = false;
                             foreach ($columns as $colName => $colData) {
                                 if (array_key_exists($colName, $showTotalColumns)) {
-                                    if ($showTotalColumns[$colName] == 'point') {
-                                        echo '<td class="right bg-black"><b>' . number_format($total[$colName], 2, '.', ',') . '</b></td>';
-                                    } else {
-                                        echo '<td class="right bg-black"><b>' . strtoupper($showTotalColumns[$colName]) . ' ' . number_format($total[$colName], 2, '.', ',') . '</b></td>';
+
+                                    if (array_key_exists('function', $showTotalColumns[$colName])){
+                                        $function = $showTotalColumns[$colName]['function'];
+                                        if (is_object($function) && $function instanceof Closure){
+                                            $total[$colName] = $function($total);
+                                        } else {
+                                            if ($showTotalColumns[$colName]['function'] == 'avg') {
+                                                $total[$colName] = round($total[$colName] / $no, 2);
+                                            }
+                                        }
+                                    }
+
+                                    if (array_key_exists('format',$showTotalColumns[$colName])){
+                                        if ($showTotalColumns[$colName]['format'] == 'point') {
+                                            echo '<td class="right bg-black"><b>' . number_format($total[$colName], 2, '.', ',') . '</b></td>';
+                                        } else {
+                                            echo '<td class="right bg-black"><b>' . strtoupper($showTotalColumns[$colName]['format']) . ' ' . number_format($total[$colName], 2, '.', ',') . '</b></td>';
+                                        }
                                     }
                                     $dataFound = true;
                                 } else {
@@ -179,22 +193,36 @@
             @if ($showTotalColumns != [] && $ctr > 1)
                 <tr class="f-white">
                     @if ($showNumColumn || $grandTotalSkip > 1)
-                        <td colspan="{{ $grandTotalSkip }}" class="bg-black"><b>Grand Total</b></td> {{-- For Number --}}
+                        <td colspan="{{ $grandTotalSkip }}" class="bg-black"><b>{{ $totalLabel }}</b></td> {{-- For Number --}}
                     @endif
                     <?php $dataFound = false; ?>
                     @foreach ($columns as $colName => $colData)
-                        @if (array_key_exists($colName, $showTotalColumns))
-                            <?php $dataFound = true; ?>
-                            @if ($showTotalColumns[$colName] == 'point')
-                                <td class="bg-black right"><b>{{ number_format($total[$colName], 2, '.', ',') }}</b></td>
+                            @if (array_key_exists($colName, $showTotalColumns))
+                                <?php $dataFound = true; ?>
+                                <?php
+                                if (array_key_exists('function', $showTotalColumns[$colName])){
+                                    $function = $showTotalColumns[$colName]['function'];
+                                    if (is_object($function) && $function instanceof Closure){
+                                        $total[$colName] = $function($total);
+                                    } else {
+                                        if ($showTotalColumns[$colName]['function'] == 'avg') {
+                                            $total[$colName] = round($total[$colName] / $no, 2);
+                                        }
+                                    }
+                                }
+                                ?>
+                                @if (array_key_exists('format',$showTotalColumns[$colName]))
+                                    @if ($showTotalColumns[$colName]['format'] == 'point')
+                                        <td class="right"><b>{{ number_format($total[$colName], 2, '.', ',') }}</b></td>
+                                    @else
+                                        <td class="right"><b>{{ strtoupper($showTotalColumns[$colName]['format']) }} {{ number_format($total[$colName], 2, '.', ',') }}</b></td>
+                                    @endif
+                                @endif
                             @else
-                                <td class="bg-black right"><b>{{ strtoupper($showTotalColumns[$colName]) }} {{ number_format($total[$colName], 2, '.', ',') }}</b></td>
+                                @if ($dataFound)
+                                    <td></td>
+                                @endif
                             @endif
-                        @else
-                            @if ($dataFound)
-                                <td class="bg-black"></td>
-                            @endif
-                        @endif
                     @endforeach
                 </tr>
             @endif
