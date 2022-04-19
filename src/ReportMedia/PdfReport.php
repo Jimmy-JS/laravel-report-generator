@@ -33,13 +33,13 @@ class PdfReport extends ReportGenerator
 		if ($pdfLibrary === 'snappy') {
 			$pdf = \App::make('snappy.pdf.wrapper');
 			$pdf->setOption('footer-font-size', 10);
-			$pdf->setOption('footer-left', 'Page [page] of [topage]');
-			$pdf->setOption('footer-right', 'Date Printed: ' . date('d M Y H:i:s'));
+			$pdf->setOption('footer-left', __('laravel-report-generator::messages.page'));
+			$pdf->setOption('footer-right', __('laravel-report-generator::messages.printed_at', ['date' => date('d M Y H:i:s')]));
 		} else if ($pdfLibrary === 'dompdf') {
 			try {
 				$pdf = \App::make('dompdf.wrapper');
 			} catch (\ReflectionException $e) {
-				throw new \Exception('Please install either barryvdh/laravel-snappy or laravel-dompdf to generate PDF Report!');
+				throw new \Exception(__('laravel-report-generator::exceptions.pdf_not_found'));
 			}
 		}
 

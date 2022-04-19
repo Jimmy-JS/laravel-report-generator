@@ -117,7 +117,7 @@
 		    		<thead>
 			    		<tr>
 							@if ($showNumColumn)
-				    			<th class="left">No</th>
+				    			<th class="left">{{ __('laravel-report-generator::messages.no') }}</th>
 							@endif
 			    			@foreach ($columns as $colName => $colData)
 			    				@if (array_key_exists($colName, $editColumns))
@@ -157,7 +157,7 @@
 				    			if ($isOnSameGroup === false) {
 		    						echo '<tr class="bg-black f-white">';
 		                            if ($showNumColumn || $grandTotalSkip > 1) {
-		                                echo '<td colspan="' . $grandTotalSkip . '"><b>Grand Total</b></td>';
+		                                echo '<td colspan="' . $grandTotalSkip . '"><b>'.__('laravel-report-generator::messages.grand_total').'</b></td>';
 		                            }
 									$dataFound = false;
 	    							foreach ($columns as $colName => $colData) {
@@ -226,7 +226,7 @@
 					@if ($showTotalColumns != [] && $ctr > 1)
 						<tr class="bg-black f-white">
                             @if ($showNumColumn || $grandTotalSkip > 1)
-                                <td colspan="{{ $grandTotalSkip }}"><b>Grand Total</b></td> {{-- For Number --}}
+                                <td colspan="{{ $grandTotalSkip }}"><b>{{ __('laravel-report-generator::messages.grand_total') }}</b></td> {{-- For Number --}}
                             @endif
 							<?php $dataFound = false; ?>
 							@foreach ($columns as $colName => $colData)
@@ -251,13 +251,13 @@
 	    <script type="text/php">
 	    	@if (strtolower($orientation) == 'portrait')
 	        if ( isset($pdf) ) {
-	            $pdf->page_text(30, ($pdf->get_height() - 26.89), "Date Printed: " . date('d M Y H:i:s'), null, 10);
-	        	$pdf->page_text(($pdf->get_width() - 84), ($pdf->get_height() - 26.89), "Page {PAGE_NUM} of {PAGE_COUNT}", null, 10);
+	            $pdf->page_text(30, ($pdf->get_height() - 26.89), __('laravel-report-generator::messages.printed_at', ['date' => date('d M Y H:i:s')]), null, 10);
+	        	$pdf->page_text(($pdf->get_width() - 84), ($pdf->get_height() - 26.89), __('laravel-report-generator::messages.page_pdf'), null, 10);
 	        }
 		    @elseif (strtolower($orientation) == 'landscape')
 		    if ( isset($pdf) ) {
-		        $pdf->page_text(30, ($pdf->get_height() - 26.89), "Date Printed: " . date('d M Y H:i:s'), null, 10);
-		    	$pdf->page_text(($pdf->get_width() - 84), ($pdf->get_height() - 26.89), "Page {PAGE_NUM} of {PAGE_COUNT}", null, 10);
+		        $pdf->page_text(30, ($pdf->get_height() - 26.89), __('laravel-report-generator::messages.printed_at', ['date' => date('d M Y H:i:s')]), null, 10);
+		    	$pdf->page_text(($pdf->get_width() - 84), ($pdf->get_height() - 26.89), __('laravel-report-generator::messages.page_pdf'), null, 10);
 		    }
 		    @endif
 	    </script>
