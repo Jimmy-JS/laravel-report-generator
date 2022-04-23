@@ -71,7 +71,7 @@
             <thead>
                 <tr>
                     @if ($showNumColumn)
-                        <th class="left">No</th>
+                        <th class="left">{{ __('laravel-report-generator::messages.no') }}</th>
                     @endif
                     @foreach ($columns as $colName => $colData)
                         @if (array_key_exists($colName, $editColumns))
@@ -110,7 +110,7 @@
                         if ($isOnSameGroup === false) {
                             echo '<tr class="f-white">';
                             if ($showNumColumn || $grandTotalSkip > 1) {
-                                echo '<td class="bg-black" colspan="' . $grandTotalSkip . '"><b>Grand Total</b></td>';
+                                echo '<td class="bg-black" colspan="' . $grandTotalSkip . '"><b>'.__('laravel-report-generator::messages.grand_total').'</b></td>';
                             }
                             $dataFound = false;
                             foreach ($columns as $colName => $colData) {
@@ -179,7 +179,7 @@
             @if ($showTotalColumns != [] && $ctr > 1)
                 <tr class="f-white">
                     @if ($showNumColumn || $grandTotalSkip > 1)
-                        <td colspan="{{ $grandTotalSkip }}" class="bg-black"><b>Grand Total</b></td> {{-- For Number --}}
+                        <td colspan="{{ $grandTotalSkip }}" class="bg-black"><b>{{ __('laravel-report-generator::messages.grand_total') }}</b></td> {{-- For Number --}}
                     @endif
                     <?php $dataFound = false; ?>
                     @foreach ($columns as $colName => $colData)

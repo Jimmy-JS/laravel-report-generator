@@ -48,6 +48,8 @@ class ServiceProvider extends IlluminateServiceProvider
         }
 
         $this->loadViewsFrom(__DIR__ . '/views', 'laravel-report-generator');
+        $this->loadTranslationsFrom(__DIR__.'/lang', 'laravel-report-generator');
+
 
         $this->publishes([
             __DIR__.'/../config/report-generator.php' => config_path('report-generator.php')
@@ -56,6 +58,10 @@ class ServiceProvider extends IlluminateServiceProvider
         $this->publishes([
             __DIR__.'/views' => base_path('resources/views/vendor/laravel-report-generator')
         ], 'laravel-report:view-template');
+
+        $this->publishes([
+            __DIR__.'/lang' => resource_path('lang/vendor/laravel-report-generator'),
+        ]);
     }
 
     protected function registerAliases()

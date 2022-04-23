@@ -13,7 +13,7 @@ class CSVReport extends ReportGenerator
     public function download($filename, $save = false)
     {
         if (!class_exists(Writer::class)) {
-            throw new Exception('Please install league/csv to generate CSV Report!');
+            throw new Exception(__('laravel-report-generator::exceptions.league_csv_not_found'));
         }
 
         if ($save) {
