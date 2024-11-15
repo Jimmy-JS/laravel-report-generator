@@ -1,10 +1,15 @@
 # Laravel Report Generators (PDF, CSV & Excel)
-Rapidly Generate Simple Pdf Report on Laravel (Using [barryvdh/laravel-dompdf](https://github.com/barryvdh/laravel-dompdf) or [barryvdh/laravel-snappy](https://github.com/barryvdh/laravel-snappy)) or CSV / Excel Report (using [Maatwebsite/Laravel-Excel](https://github.com/Maatwebsite/Laravel-Excel))
 
-This package provides a simple pdf, csv & excel report generators to speed up your workflow.
-It also allows you to stream(), download(), or store() the report seamlessly.
+Rapidly Generate Simple Pdf Report on Laravel (
+Using [barryvdh/laravel-dompdf](https://github.com/barryvdh/laravel-dompdf)
+or [barryvdh/laravel-snappy](https://github.com/barryvdh/laravel-snappy)) or CSV / Excel Report (
+using [Maatwebsite/Laravel-Excel](https://github.com/Maatwebsite/Laravel-Excel))
+
+This package provides a simple pdf, csv & excel report generators to speed up your workflow. It also allows you to
+stream(), download(), or store() the report seamlessly.
 
 ## Version
+
 | Version | Laravel Version | Php Version | Maatwebsite/Excel Ver | Feature
 |------|---------|-------|--------|-------
 | 1.0  | <= 5.6  | <=7.0 | ~2.1.0 | using `chunk()` to handle big data
@@ -14,11 +19,13 @@ It also allows you to stream(), download(), or store() the report seamlessly.
 Find the comparison between `chunk` and `cursor` in [here](https://qiita.com/ryo511/items/ebcd1c1b2ad5addc5c9d)
 
 ## Installation
+
 Add package to your composer:
 
     composer require jimmyjs/laravel-report-generator
 
-If you are running Laravel > 5.5 that's all you need to do. If you are using Laravel < 5.5 add the ServiceProvider to the providers array in config/app.php
+If you are running Laravel > 5.5 that's all you need to do. If you are using Laravel < 5.5 add the ServiceProvider to
+the providers array in config/app.php
 
     Jimmyjs\ReportGenerator\ServiceProvider::class,
 
@@ -32,17 +39,19 @@ If you are running Laravel > 5.5 that's all you need to do. If you are using Lar
 
     php artisan vendor:publish --provider="Jimmyjs\ReportGenerator\ServiceProvider"
 
-If you want to generate a pdf report, please install either dompdf / snappy pdf. 
-This package will automatically use snappy pdf. If you want to use dompdf then please change `config/report-generator.php`:
+If you want to generate a pdf report, please install either dompdf / snappy pdf. This package will automatically use
+snappy pdf. If you want to use dompdf then please change `config/report-generator.php`:
 
     return [
         'flush' => false,
         'pdfLibrary' => 'dompdf'
     ];
 
-For better speed on generating pdf report, I recommend you to use laravel snappy package. To using laravel snappy, you should install `wkhtmltopdf` to work with this package [(Jump to wkhtmltopdf installation)](#wkhtmltopdf-installation)
+For better speed on generating pdf report, I recommend you to use laravel snappy package. To using laravel snappy, you
+should install `wkhtmltopdf` to work with this package [(Jump to wkhtmltopdf installation)](#wkhtmltopdf-installation)
 
 ### Example Display PDF Code
+
 ```php
 use PdfReport;
 
@@ -91,20 +100,24 @@ public function displayReport(Request $request)
 }
 ```
 
-Note: For downloading to excel / CSV, just change `PdfReport` facade to `ExcelReport` / `CSVReport` facade with no more modifications
+Note: For downloading to excel / CSV, just change `PdfReport` facade to `ExcelReport` / `CSVReport` facade with no more
+modifications
 
 ### Data Manipulation
+
 ```php
 $columns = [
     'Name' => 'name',
-    'Registered At' => 'registered_at',
+    'Registered At', // will look for lower_snake_case column of the field name
     'Total Balance' => 'balance',
     'Status' => function($customer) { // You can do data manipulation, if statement or any action do you want inside this closure
         return ($customer->balance > 100000) ? 'Rich Man' : 'Normal Guy';
     }
 ];
 ```
+
 Will produce a same result with:
+
 ```php
 $columns = [
     'Name' => function($customer) {
@@ -121,10 +134,13 @@ $columns = [
     }
 ];
 ```
+
 ### Report Output
+
 ![Report Output with Grand Total](https://raw.githubusercontent.com/Jimmy-JS/laravel-report-generator/master/screenshots/report-with-total.png)
 
 With this manipulation, you could do some **eager loading relation** like:
+
 ```php
 $post = Post::with('comments')->where('active', 1);
 
@@ -140,7 +156,9 @@ $columns = [
 ```
 
 ### Example Code With Group By
+
 Or, you can total all records by group using `groupBy` method
+
 ```php
     ...
     // Do some querying..
@@ -182,12 +200,15 @@ Or, you can total all records by group using `groupBy` method
 **PLEASE TAKE NOTE TO SORT GROUPBY COLUMN VIA QUERY FIRST TO USE THIS GROUP BY METHOD.**
 
 ### Output Report With Group By Registered At
+
 ![Output Report with Group By Grand Total](https://raw.githubusercontent.com/Jimmy-JS/laravel-report-generator/master/screenshots/report-with-group-by.png)
 
-
 ## Wkhtmltopdf Installation
+
 * Download wkhtmltopdf from https://wkhtmltopdf.org/downloads.html
-* Change your snappy config located in `/config/snappy.php` (run `php artisan vendor:publish` if `snappy.php` file is not created) to:
+* Change your snappy config located in `/config/snappy.php` (run `php artisan vendor:publish` if `snappy.php` file is
+  not created) to:
+
 ```
     'pdf' => array(
         'enabled' => true,
@@ -198,18 +219,20 @@ Or, you can total all records by group using `groupBy` method
     ),
 ```
 
-
 ## Other Method
 
 ### 1. setPaper($paper = 'a4')
+
 **Supported Media Type**: PDF
 
 **Description**: Set Paper Size
 
 **Params**:
+
 * $paper (Default: 'a4')
 
 **Usage:**
+
 ```php
 PdfReport::of($title, $meta, $queryBuilder, $columns)
          ->setPaper('a6')
@@ -217,14 +240,17 @@ PdfReport::of($title, $meta, $queryBuilder, $columns)
 ```
 
 ### 2. setCss(Array $styles)
+
 **Supported Media Type**: PDF, Excel
 
 **Description**: Set a new custom styles with given selector and style to apply
 
 **Params**:
+
 * Array $styles (Key: $selector, Value: $style)
 
 **Usage:**
+
 ```php
 ExcelReport::of($title, $meta, $queryBuilder, $columns)
             ->editColumn('Registered At', [
@@ -238,14 +264,17 @@ ExcelReport::of($title, $meta, $queryBuilder, $columns)
 ```
 
 ### 3. setOrientation($orientation = 'portrait')
+
 **Supported Media Type**: PDF
 
 **Description**: Set Orientation to Landscape or Portrait
 
 **Params**:
+
 * $orientation (Default: 'portrait')
 
 **Usage:**
+
 ```php
 PdfReport::of($title, $meta, $queryBuilder, $columns)
          ->setOrientation('landscape')
@@ -253,11 +282,14 @@ PdfReport::of($title, $meta, $queryBuilder, $columns)
 ```
 
 ### 4. withoutManipulation()
+
 **Supported Media Type**: PDF, Excel, CSV
 
-**Description**: Faster generating report, but all columns properties must be matched the selected column from SQL Queries
+**Description**: Faster generating report, but all columns properties must be matched the selected column from SQL
+Queries
 
 **Usage:**
+
 ```php
 $queryBuilder = Customer::select(['name', 'age'])->get();
 $columns = ['Name', 'Age'];
@@ -267,14 +299,17 @@ PdfReport::of($title, $meta, $queryBuilder, $columns)
 ```
 
 ### 5. showMeta($value = true)
+
 **Supported Media Type**: PDF, Excel, CSV
 
 **Description**: Show / hide meta attribute on report
 
 **Params**:
+
 * $value (Default: true)
 
 **Usage:**
+
 ```php
 PdfReport::of($title, $meta, $queryBuilder, $columns)
          ->showMeta(false) // Hide meta
@@ -282,14 +317,17 @@ PdfReport::of($title, $meta, $queryBuilder, $columns)
 ```
 
 ### 6. showHeader($value = true)
+
 **Supported Media Type**: PDF, Excel, CSV
 
 **Description**: Show / hide column header on report
 
 **Params**:
+
 * $value (Default: true)
 
 **Usage:**
+
 ```php
 PdfReport::of($title, $meta, $queryBuilder, $columns)
          ->showHeader(false) // Hide column header
@@ -297,14 +335,17 @@ PdfReport::of($title, $meta, $queryBuilder, $columns)
 ```
 
 ### 7. showNumColumn($value = true)
+
 **Supported Media Type**: PDF, Excel, CSV
 
 **Description**: Show / hide number column on report
 
 **Params**:
+
 * $value (Default: true)
 
 **Usage:**
+
 ```php
 PdfReport::of($title, $meta, $queryBuilder, $columns)
          ->showNumColumn(false) // Hide number column
@@ -312,14 +353,17 @@ PdfReport::of($title, $meta, $queryBuilder, $columns)
 ```
 
 ### 8. simple()
+
 **Supported Media Type**: Excel
 
 **Description**: Generate excel in simple mode (no styling on generated excel report, but faster in generating report)
 
 **Params**:
+
 * None
 
 **Usage:**
+
 ```php
 ExcelReport::of($title, $meta, $queryBuilder, $columns)
          ->simple()

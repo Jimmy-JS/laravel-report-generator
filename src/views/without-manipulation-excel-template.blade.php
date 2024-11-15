@@ -3,50 +3,66 @@
     <head>
         <meta charset="UTF-8">
         <style>
-            .center {
-                text-align: center;
-            }
-            table .left {
-                text-align: left;
-            }
-            table .right {
-                text-align: right;
-            }
-            table .bold {
-                font-weight: 600;
-            }
-            .bg-black {
-                background-color: #000;
-            }
-            .f-white {
-                color: #fff;
-            }
+            .center { text-align: center; }
+            table .left { text-align: left; }
+            table .right { text-align: right; }
+            table .bold { font-weight: 600; }
+            .bg-black { background-color: #000; }
+            .f-white { color: #fff; }
         </style>
     </head>
     <body>
         <?php
         $ctr = 1;
         $no = 1;
-        $total = [];
-        $grandTotalSkip = 1;
+        $total = array_map(function () { return 0; }, $showTotalColumns);
+        $avg = array_map(function () { return 0; }, $showAvgColumns);
+        $aggregateColSkip = 1;
         $isOnSameGroup = true;
         $currentGroupByData = [];
 
-        foreach ($showTotalColumns as $column => $type) {
-            $total[$column] = 0;
-        }
-
-        if ($showTotalColumns != []) {
+        if (count($showTotalColumns) > 0 || count($showAvgColumns) > 0) {
             foreach ($columns as $colName => $colData) {
-                if (!array_key_exists($colName, $showTotalColumns)) {
-                    $grandTotalSkip++;
+                if (!array_key_exists($colName, $showTotalColumns) && !array_key_exists($colName, $showAvgColumns)) {
+                    $aggregateColSkip++;
                 } else {
                     break;
                 }
             }
         }
 
-        $grandTotalSkip = !$showNumColumn ? $grandTotalSkip - 1 : $grandTotalSkip;
+        $aggregateColSkip = !$showNumColumn ? $aggregateColSkip - 1 : $aggregateColSkip;
+
+        function renderAggregateRow ($showAvgColumns) use($aggregateColSkip) {
+            if ($showAvgColumns != []) return '';
+
+            return "
+                <tr class='f-white'>
+                    <td colspan='{$aggregateColSkip}' class='bg-black'><b>{$avgLabel}</b></td>
+                <?php $dataFound = false; ?>
+                    @foreach ($columns as $colName => $colData)
+                        @if (array_key_exists($colName, $showAvgColumns))
+                            <?php
+                            $dataFound = true;
+                            $avgFormat = $showAvgColumns[$colName];
+                            $avg = round($total[$colName] / $no, 2);
+                            ?>
+                            @if ($avgFormat instanceof Closure)
+                                <td class='bg-black left'><b>{{ $function($avg) }}</b></td>
+                            @elseif ($avgFormat == 'point')
+                                <td class='bg-black left'><b>{{ number_format($avg, 2) }}</b></td>
+                            @else
+                                <td class='bg-black left'><b>{{ strtoupper($avgFormat) }} {{ number_format($avg, 2) }}</b></td>
+                            @endif
+                        @else
+                            @if ($dataFound)
+                                <td class='bg-black'></td>
+                            @endif
+                        @endif
+                    @endforeach
+                </tr>
+            ";
+        }
         ?>
         <table>
             <tr>
@@ -100,8 +116,8 @@
 
                         if ($isOnSameGroup === false) {
                             echo '<tr class="f-white">';
-                            if ($showNumColumn || $grandTotalSkip > 1) {
-                                echo '<td class="bg-black" colspan="' . $grandTotalSkip . '"><b>'.__('laravel-report-generator::messages.grand_total').'</b></td>';
+                            if ($showNumColumn || $aggregateColSkip > 1) {
+                                echo '<td class="bg-black" colspan="' . $aggregateColSkip . '"><b>'.__('laravel-report-generator::messages.grand_total').'</b></td>';
                             }
                             $dataFound = false;
                             foreach ($columns as $colName => $colData) {
@@ -150,15 +166,43 @@
             @endforeach
             @if ($showTotalColumns != [] && $ctr > 1)
                 <tr class="f-white">
-                    <td colspan="{{ $grandTotalSkip }}" class="bg-black"><b>{{ __('laravel-report-generator::messages.grand_total') }}</b></td> {{-- For Number --}}
+                    <td colspan="{{ $aggregateColSkip }}" class="bg-black"><b>{{ $totalLabel }}</b></td> {{-- For Number --}}
                     <?php $dataFound = false; ?>
                     @foreach ($columns as $colName => $colData)
                         @if (array_key_exists($colName, $showTotalColumns))
-                            <?php $dataFound = true; ?>
-                            @if ($showTotalColumns[$colName] == 'point')
-                                <td class="bg-black left"><b>{{ number_format($total[$colName], 2, '.', ',') }}</b></td>
+                            <?php $dataFound = true; $totalFormat = $showTotalColumns[$colName]; ?>
+                            @if ($totalFormat instanceof Closure)
+                                <td class="bg-black left"><b>{{ $totalFormat($total[$colName]) }}</b></td>
+                            @elseif ($totalFormat == 'point')
+                                <td class="bg-black left"><b>{{ number_format($total[$colName], 2) }}</b></td>
                             @else
-                                <td class="bg-black left"><b>{{ strtoupper($showTotalColumns[$colName]) }} {{ number_format($total[$colName], 2, '.', ',') }}</b></td>
+                                <td class="bg-black left"><b>{{ strtoupper($totalFormat) }} {{ number_format($total[$colName], 2) }}</b></td>
+                            @endif
+                        @else
+                            @if ($dataFound)
+                                <td class="bg-black"></td>
+                            @endif
+                        @endif
+                    @endforeach
+                </tr>
+            @endif
+            @if ($showAvgColumns != [] && $ctr > 1)
+                <tr class="f-white">
+                    <td colspan="{{ $aggregateColSkip }}" class="bg-black"><b>{{ $avgLabel }}</b></td> {{-- For Number --}}
+                    <?php $dataFound = false; ?>
+                    @foreach ($columns as $colName => $colData)
+                        @if (array_key_exists($colName, $showAvgColumns))
+                            <?php
+                                $dataFound = true;
+                                $avgFormat = $showAvgColumns[$colName];
+                                $avg = round($total[$colName] / $no, 2);
+                            ?>
+                            @if ($avgFormat instanceof Closure)
+                                <td class="bg-black left"><b>{{ $function($avg) }}</b></td>
+                            @elseif ($avgFormat == 'point')
+                                <td class="bg-black left"><b>{{ number_format($avg, 2) }}</b></td>
+                            @else
+                                <td class="bg-black left"><b>{{ strtoupper($avgFormat) }} {{ number_format($avg, 2) }}</b></td>
                             @endif
                         @else
                             @if ($dataFound)
